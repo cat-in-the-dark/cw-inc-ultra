@@ -10,12 +10,12 @@ import com.catinthedark.cw_inc.lib.*;
 public class InputSystemDef extends AbstractSystemDef {
     public static InputSystemDef instance() {
         Sys worker = new Sys();
-        Port<Nothing> onEsc = new QueuePort<>(worker::onEsc, true);
-        return new InputSystemDef(worker, onEsc);
+        Port<Nothing> keyEsc = new QueuePort<>(worker::onEsc, true);
+        return new InputSystemDef(worker, keyEsc);
     }
 
     private InputSystemDef(Sys sys, Port<Nothing> keyEsc) {
-        super(new Updater[]{new Updater(sys::keyUpPoll)}, new Port[]{new QueuePort<>(sys::onEsc, true)}, 100);
+        super(new Updater[]{new Updater(sys::keyUpPoll)}, new Port[]{keyEsc}, 100);
         this.worker = sys;
         this.keyEsc = keyEsc;
     }
