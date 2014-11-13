@@ -1,10 +1,6 @@
-package com.catinthedark.cw_inc;
+package com.catinthedark.cw_inc.impl;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.catinthedark.cw_inc.lib.AbstractSystem;
 import com.catinthedark.cw_inc.lib.CallbackRunner;
 import com.catinthedark.cw_inc.lib.Launcher;
 import com.catinthedark.cw_inc.lib.Nothing;

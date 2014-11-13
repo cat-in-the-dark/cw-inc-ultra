@@ -1,4 +1,4 @@
-package com.catinthedark.cw_inc;
+package com.catinthedark.cw_inc.impl;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
