@@ -10,10 +10,10 @@ public class CwInc extends ApplicationAdapter {
 
     @Override
     public void create() {
-        final ViewSystem viewSystem = new ViewSystem();
-        final InputSystem inputSystem = new InputSystem();
+        final ViewSystemDef viewSystem = ViewSystemDef.instance();
+        final InputSystemDef inputSystem = InputSystemDef.instance();
 
-        inputSystem.onKeyUp.connect(viewSystem.cameraUp);
+        inputSystem.onKeyUp().connect(viewSystem.cameraUp);
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
