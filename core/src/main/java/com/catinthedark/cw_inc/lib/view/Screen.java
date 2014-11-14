@@ -1,15 +1,19 @@
 package com.catinthedark.cw_inc.lib.view;
 
-import java.util.List;
-
 /**
  * Created by over on 12.11.14.
  */
 public abstract class Screen<T> {
     private final Layer<T>[] layers;
+    public final int ttl;
 
     public Screen(Layer<T>... layers) {
+        this(0, layers);
+    }
+
+    public Screen(int ttl, Layer<T>... layers) {
         this.layers = layers;
+        this.ttl = ttl;
     }
 
     public void render(T shared) {

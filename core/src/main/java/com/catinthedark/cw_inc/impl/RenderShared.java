@@ -7,5 +7,5 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
  * Created by over on 12.11.14.
  */
 public class RenderShared {
-    public final Camera camera = new OrthographicCamera(640, 480);
+    public final Camera camera = new OrthographicCamera(1024, 640);
 }

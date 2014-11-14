@@ -10,6 +10,8 @@ public class CwInc extends ApplicationAdapter {
 
     @Override
     public void create() {
+        Assets.init(new Config());
+
         final ViewSystemDef viewSystem = ViewSystemDef.instance();
         final InputSystemDef inputSystem = InputSystemDef.instance();
 

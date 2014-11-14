@@ -22,7 +22,7 @@ public class ViewSystemDef extends AbstractSystemDef {
 
     private static class Sys {
         final RenderShared shared = new RenderShared();
-        final ScreenManager<RenderShared> manager = new ScreenManager<>(shared, new MainScreen());
+        final ScreenManager<RenderShared> manager = new ScreenManager<>(shared, new LogoScreen(), new MainScreen());
 
         {
             shared.camera.update();
