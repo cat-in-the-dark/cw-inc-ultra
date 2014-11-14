@@ -17,7 +17,7 @@ public class CwInc extends ApplicationAdapter {
         final PuppetMasterDef puppetMaster = PuppetMasterDef.instance();
 
         inputSystem.onKeyUp().connect(viewSystem.cameraUp);
-        puppetMaster.onMenuEnter.connect(viewSystem.onMenuEnter);
+        puppetMaster.onMenuEnter.connect(inputSystem.menuEnter, viewSystem.onMenuEnter);
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
