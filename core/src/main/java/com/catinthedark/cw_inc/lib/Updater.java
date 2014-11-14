@@ -6,21 +6,13 @@ package com.catinthedark.cw_inc.lib;
 public class Updater {
     final LogicalFunction fn;
     final int period;
-    final UpdateConditionFn condFn;
 
-
-    public Updater(LogicalFunction fn, int period, UpdateConditionFn condFn) {
+    public Updater(LogicalFunction fn, int period) {
         this.fn = fn;
         this.period = period;
-        this.condFn = condFn;
-    }
-
-    public Updater(LogicalFunction fn, UpdateConditionFn condFn) {
-        this(fn, 1, condFn);
     }
 
     public Updater(LogicalFunction fn) {
-        this(fn, 1, null);
+        this(fn, 1);
     }
-
 }

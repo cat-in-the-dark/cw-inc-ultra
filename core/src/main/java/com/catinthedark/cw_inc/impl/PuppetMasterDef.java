@@ -12,18 +12,12 @@ import com.catinthedark.cw_inc.lib.Pipe;
  * Главная система, которая следит за всем игровым процессом
  */
 public class PuppetMasterDef extends AbstractSystemDef {
-    public static PuppetMasterDef instance() {
-        Sys sys = new Sys();
-        return new PuppetMasterDef(sys);
-    }
-
-    private PuppetMasterDef(Sys sys) {
-        super();
-        this.sys = sys;
-    }
-
-    final Sys sys;
+    final Sys sys = new Sys();
     public final Pipe<Nothing> onMenuEnter = new Pipe<>();
+
+    {
+        isQueueBlocking = true;
+    }
 
     @Override
     public void onStart() {
@@ -36,11 +30,8 @@ public class PuppetMasterDef extends AbstractSystemDef {
 
     }
 
-
-    private static class Sys {
+    private class Sys {
         GameState state = GameState.INIT;
 
     }
-
-
 }

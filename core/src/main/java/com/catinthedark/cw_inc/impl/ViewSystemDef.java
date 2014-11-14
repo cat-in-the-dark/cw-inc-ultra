@@ -7,21 +7,15 @@ import com.catinthedark.cw_inc.lib.view.ScreenManager;
  * Created by over on 11.11.14.
  */
 public class ViewSystemDef extends AbstractSystemDef {
-    public static ViewSystemDef instance() {
-        Sys worker = new Sys();
-        return new ViewSystemDef(worker);
+    private final Sys sys = new Sys();
+    public final Port<Nothing> cameraUp = asyncPort(sys::cameraUp);
+    public final Port<Nothing> onMenuEnter = serialPort(sys::menuEnter);
+
+    {
+        updater(sys::render);
     }
 
-    private ViewSystemDef(Sys sys) {
-        super(new Updater[]{new Updater(sys::render)}, 0);
-        this.cameraUp = asyncPort(sys::cameraUp);
-        this.onMenuEnter = serialPort(sys::menuEnter);
-    }
-
-    public final Port<Nothing> cameraUp;
-    public final Port<Nothing> onMenuEnter;
-
-    private static class Sys {
+    private class Sys {
         final RenderShared shared = new RenderShared();
         final ScreenManager<RenderShared> manager = new ScreenManager<>(shared, new LogoScreen(), new MainScreen());
 

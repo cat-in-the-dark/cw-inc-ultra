@@ -12,11 +12,11 @@ public class CwInc extends ApplicationAdapter {
     public void create() {
         Assets.init(new Config());
 
-        final ViewSystemDef viewSystem = ViewSystemDef.instance();
-        final InputSystemDef inputSystem = InputSystemDef.instance();
-        final PuppetMasterDef puppetMaster = PuppetMasterDef.instance();
+        final ViewSystemDef viewSystem = new ViewSystemDef();
+        final InputSystemDef inputSystem = new InputSystemDef();
+        final PuppetMasterDef puppetMaster = new PuppetMasterDef();
 
-        inputSystem.onKeyUp().connect(viewSystem.cameraUp);
+        inputSystem.onKeyUp.connect(viewSystem.cameraUp);
         puppetMaster.onMenuEnter.connect(inputSystem.menuEnter, viewSystem.onMenuEnter);
 
         Gdx.input.setInputProcessor(new InputAdapter() {

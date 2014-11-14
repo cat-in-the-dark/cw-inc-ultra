@@ -10,18 +10,17 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Created by over on 08.11.14.
  */
 public abstract class AbstractSystemDef {
-    protected final Updater[] updaters;
-    protected final boolean isQueueBlocking;
-    public final int masterDelay;
+    protected List<Updater> updaters = new ArrayList<>();
+    protected boolean isQueueBlocking = false;
+    protected int masterDelay = 0;
+
+    public int getMasterDelay() {
+        return masterDelay;
+    }
 
     public final BlockingQueue<RunnableEx> masterQueue = new LinkedBlockingQueue<>();
     private final List<BlockingQueue<RunnableEx>> secondaryQueues = new ArrayList<>();
 
-    private AbstractSystemDef(Updater[] updaters, int masterDelay, boolean isQueueBlocking) {
-        this.updaters = updaters;
-        this.masterDelay = masterDelay;
-        this.isQueueBlocking = isQueueBlocking;
-    }
 
     public <T> Port<T> serialPort(DispatchableLogicFunction<T> fn) {
         return new SerialPort<>(this, fn);
@@ -41,15 +40,15 @@ public abstract class AbstractSystemDef {
         return new SingleMsgPort<>(queue, fn);
     }
 
-    public AbstractSystemDef() {
-        this(new Updater[]{}, 0, true);
+    public Updater updater(LogicalFunction fn) {
+        return updater(fn, 1);
     }
 
-
-    public AbstractSystemDef(Updater[] updaters, int masterDelay) {
-        this(updaters, masterDelay, false);
+    public Updater updater(LogicalFunction fn, int period) {
+        Updater updater = new Updater(fn, period);
+        updaters.add(updater);
+        return updater;
     }
-
 
     private interface NoArgFunction<T> {
         T call() throws InterruptedException;
