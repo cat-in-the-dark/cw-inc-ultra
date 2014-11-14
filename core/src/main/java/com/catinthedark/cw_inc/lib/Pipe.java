@@ -14,8 +14,24 @@ public class Pipe<T> {
             this.ports.add(port);
     }
 
+    /**
+     * ^^ recursion
+     *
+     * @param msg
+     * @throws InterruptedException
+     */
     public void write(T msg) throws InterruptedException {
-        for (Port p : ports)
-            p.write(msg);
+        new RunnableEx() {
+            int index = -1;
+
+            @Override
+            public void run() throws InterruptedException {
+                index++;
+                if (index >= ports.size())
+                    return;
+                System.out.println("index:" + index);
+                ports.get(index).write(msg, this);
+            }
+        }.run();
     }
 }

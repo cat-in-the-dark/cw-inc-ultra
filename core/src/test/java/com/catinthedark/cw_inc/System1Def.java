@@ -2,7 +2,6 @@ package com.catinthedark.cw_inc;
 
 import com.catinthedark.cw_inc.lib.AbstractSystemDef;
 import com.catinthedark.cw_inc.lib.Port;
-import com.catinthedark.cw_inc.lib.QueuePort;
 
 /**
  * Created by over on 08.11.14.
@@ -14,17 +13,13 @@ public class System1Def extends AbstractSystemDef {
 //    }
 
     public static System1Def instance() {
-        Sys sys = new Sys();
-        Port<String> messagePoll = new QueuePort<>(sys::onMessage);
-        return new System1Def(messagePoll);
+        return new System1Def();
     }
 
-    private System1Def(Port<String> messagePoll) {
-        super(new Port[]{messagePoll});
-        this.messagePoll = messagePoll;
+    private System1Def() {
     }
 
-    public final Port<String> messagePoll;
+    public final Port<String> messagePoll = asyncPort(new Sys()::onMessage);
 
     private static class Sys {
         private void onMessage(long globalTime, String msg) throws InterruptedException {

@@ -14,14 +14,21 @@ public class CwInc extends ApplicationAdapter {
 
         final ViewSystemDef viewSystem = ViewSystemDef.instance();
         final InputSystemDef inputSystem = InputSystemDef.instance();
+        final PuppetMasterDef puppetMaster = PuppetMasterDef.instance();
 
         inputSystem.onKeyUp().connect(viewSystem.cameraUp);
+        puppetMaster.onMenuEnter.connect(viewSystem.onMenuEnter);
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
                 if (keycode == Input.Keys.ESCAPE) {
-                    inputSystem.keyEsc.write(Nothing.NONE);
+                    try {
+                        inputSystem.keyEsc.write(Nothing.NONE, () -> {
+                        });
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     return true;
                 }
                 return false;
@@ -30,6 +37,7 @@ public class CwInc extends ApplicationAdapter {
 
         Launcher.inThread(inputSystem);
         runner = Launcher.viaCallback(viewSystem);
+        Launcher.inThread(puppetMaster);
     }
 
     @Override
