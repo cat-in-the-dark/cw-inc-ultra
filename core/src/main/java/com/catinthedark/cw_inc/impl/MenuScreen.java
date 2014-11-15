@@ -11,13 +11,12 @@ import com.catinthedark.cw_inc.lib.view.Screen;
 /**
  * Created by over on 12.11.14.
  */
-public class MainScreen extends Screen<RenderShared> {
+public class MenuScreen extends Screen<RenderShared> {
 
-    public MainScreen() {
+    public MenuScreen() {
         super(new Layer<RenderShared>() {
 
             final SpriteBatch batch = new SpriteBatch();
-            final Texture img = new Texture("badlogic.jpg");
 
             @Override
             public void render(RenderShared shared) {
@@ -25,7 +24,7 @@ public class MainScreen extends Screen<RenderShared> {
                 Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
                 batch.setProjectionMatrix(shared.camera.combined);
                 batch.begin();
-                batch.draw(img, 0, 0);
+                batch.draw(Assets.textures.startGameTex, -512, -320);
 
                 shared.entityPointers.forEach(p -> {
                     if (shared.entities == null)

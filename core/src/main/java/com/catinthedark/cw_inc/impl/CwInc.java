@@ -20,21 +20,21 @@ public class CwInc extends ApplicationAdapter {
         SharedMemory<Vector2> entitiesShared = new SharedMemory<>(Vector2.class, 100);
 
         final ViewSystemDef viewSystem = new ViewSystemDef(entitiesShared.reader);
-        final InputSystemDef inputSystem = new InputSystemDef();
+        // final InputSystemDef inputSystem = new InputSystemDef();
         final PuppetMasterDef puppetMaster = new PuppetMasterDef();
         final PhysicsSystemDef physicsSystem = new PhysicsSystemDef(entitiesShared.writer);
 
-
-        inputSystem.onKeyUp.connect(viewSystem.cameraUp);
-        puppetMaster.onMenuEnter.connect(inputSystem.menuEnter, physicsSystem.menuEnter, viewSystem.onMenuEnter);
+        puppetMaster.onMenuEnter.connect(viewSystem.onMenuEnter);
+        puppetMaster.onGameStart.connect(physicsSystem.onGameStart, viewSystem.onGameStart);
+        //inputSystem.onKeyUp.connect(viewSystem.cameraUp);
         physicsSystem.entityCreated.connect(viewSystem.newEntity);
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
-                if (keycode == Input.Keys.ESCAPE) {
+                if (keycode == Input.Keys.ENTER) {
                     try {
-                        inputSystem.keyEsc.write(Nothing.NONE, () -> {
+                        puppetMaster.onKeyEnter.write(Nothing.NONE, () -> {
                         });
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -45,7 +45,7 @@ public class CwInc extends ApplicationAdapter {
             }
         });
 
-        Launcher.inThread(inputSystem);
+        //Launcher.inThread(inputSystem);
         runner = Launcher.viaCallback(viewSystem);
         Launcher.inThread(puppetMaster);
         Launcher.inThread(physicsSystem);

@@ -30,10 +30,11 @@ public class ScreenManager<T> {
     public void _goto(IndexModifyFn fn) {
         int index = fn.modify(screens.indexOf(current));
 
-        if (index > screens.size() || index < 0)
+        if (index >= screens.size() || index < 0)
             throw new ScreenIndexOverflow(index);
 
         current = screens.get(index);
+        current.beforeShow();
     }
 
     public void next() {

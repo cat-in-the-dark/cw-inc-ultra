@@ -9,9 +9,10 @@ import com.catinthedark.cw_inc.lib.*;
  */
 public class InputSystemDef extends AbstractSystemDef {
     private final Sys sys = new Sys();
-    public final Port<Nothing> keyEsc = asyncPort(sys::onEsc);
+    public final Port<Nothing> keyEnter = asyncPort(sys::onEnter);
     public final Port<Nothing> menuEnter = serialPort(sys::menuEnter);
     public final Pipe<Nothing> onKeyUp = new Pipe<>();
+    public final Pipe<Nothing> onKeyEnter = new Pipe<>();
 
     {
         updater(sys.ifInState(GameState.MENU, sys::keyUpPoll));
@@ -33,9 +34,8 @@ public class InputSystemDef extends AbstractSystemDef {
                 onKeyUp.write(Nothing.NONE);
         }
 
-        void onEsc(long globalTime, Nothing ignored) throws InterruptedException {
-            System.out.println("key ESC pressed");
-            Thread.currentThread().interrupt();
+        void onEnter(long globalTime, Nothing ignored) throws InterruptedException {
+            onKeyEnter.write(Nothing.NONE);
         }
 
         void menuEnter(long globalTime, Nothing ignored) {

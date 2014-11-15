@@ -12,16 +12,16 @@ import java.util.Random;
  */
 public class PhysicsSystemDef extends AbstractSystemDef {
     public PhysicsSystemDef(SharedMemory<Vector2>.Writer entities) {
-        masterDelay = 100;
+        masterDelay = 50;
         entityCreated = new Pipe<>();
 
         Sys sys = new Sys(entities);
         updater(sys::update);
-        menuEnter = serialPort(sys::onMenuEnter);
+        onGameStart = serialPort(sys::onGameStart);
     }
 
     public final Pipe<Integer> entityCreated;
-    public final Port<Nothing> menuEnter;
+    public final Port<Nothing> onGameStart;
 
     private class Sys {
         public Sys(SharedMemory<Vector2>.Writer entities) {
@@ -37,14 +37,14 @@ public class PhysicsSystemDef extends AbstractSystemDef {
             pointers.forEach(p -> entities.map(p).set(rand.nextInt(1024), rand.nextInt(640)));
         }
 
-        void onMenuEnter(long globalTime, Nothing ignored) throws InterruptedException {
+        void onGameStart(long globalTime, Nothing ignored) throws InterruptedException {
             System.out.println("Physics: on menu enter");
             for (int i = 0; i < 10; i++) {
                 int pointer = entities.alloc(new Vector2(rand.nextInt(1024), rand.nextInt(640)));
                 pointers.add(pointer);
                 entityCreated.write(pointer);
             }
-            state = GameState.MENU;
+            state = GameState.IN_GAME;
         }
     }
 }

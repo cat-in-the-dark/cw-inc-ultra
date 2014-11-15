@@ -16,11 +16,13 @@ public class ViewSystemDef extends AbstractSystemDef {
         updater(sys::render);
         cameraUp = asyncPort(sys::cameraUp);
         onMenuEnter = serialPort(sys::menuEnter);
+        onGameStart = serialPort(sys::onGameStart);
         newEntity = asyncPort(sys::newEntity);
     }
 
     public final Port<Nothing> cameraUp;
     public final Port<Nothing> onMenuEnter;
+    public final Port<Nothing> onGameStart;
     public final Port<Integer> newEntity;
 
     private class Sys {
@@ -30,7 +32,7 @@ public class ViewSystemDef extends AbstractSystemDef {
             if (entites == null)
                 throw new RuntimeException("entities is null?? wtf");
             shared.entities = entites;
-            manager = new ScreenManager<>(shared, new LogoScreen(), new MainScreen());
+            manager = new ScreenManager<>(shared, new LogoScreen(), new MenuScreen(), new GameScreen());
         }
 
         final RenderShared shared;
@@ -47,6 +49,10 @@ public class ViewSystemDef extends AbstractSystemDef {
 
         void menuEnter(long globalTime, Nothing ignored) {
             manager.goTo(1);
+        }
+
+        void onGameStart(long globalTime, Nothing ignored) {
+            manager.goTo(2);
         }
 
         void newEntity(long globalTime, int pointer) {

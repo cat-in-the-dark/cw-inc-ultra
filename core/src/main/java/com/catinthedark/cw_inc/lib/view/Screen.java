@@ -16,6 +16,10 @@ public abstract class Screen<T> {
         this.ttl = ttl;
     }
 
+    public void beforeShow(){
+
+    }
+
     public void render(T shared) {
         for (Layer layer : layers)
             layer.render(shared);

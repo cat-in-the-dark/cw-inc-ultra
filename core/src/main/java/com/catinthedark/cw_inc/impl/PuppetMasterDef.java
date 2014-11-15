@@ -7,13 +7,16 @@ package com.catinthedark.cw_inc.impl;
 import com.catinthedark.cw_inc.lib.AbstractSystemDef;
 import com.catinthedark.cw_inc.lib.Nothing;
 import com.catinthedark.cw_inc.lib.Pipe;
+import com.catinthedark.cw_inc.lib.Port;
 
 /**
- * Главная система, которая следит за всем игровым процессом
+ * Главная система, которая контролирует весь игровой процесс
  */
 public class PuppetMasterDef extends AbstractSystemDef {
     final Sys sys = new Sys();
     public final Pipe<Nothing> onMenuEnter = new Pipe<>();
+    public final Pipe<Nothing> onGameStart = new Pipe<>();
+    public final Port<Nothing> onKeyEnter = asyncPort(sys::onKeyEnter);
 
     {
         isQueueBlocking = true;
@@ -32,6 +35,14 @@ public class PuppetMasterDef extends AbstractSystemDef {
 
     private class Sys {
         GameState state = GameState.INIT;
+
+        void onKeyEnter(long globalTime, Nothing ignored) throws InterruptedException {
+            if (state == GameState.MENU) {
+                System.out.println("puppet:broadcast GAME_START");
+                onGameStart.write(Nothing.NONE);
+                state = GameState.IN_GAME;
+            }
+        }
 
     }
 }
