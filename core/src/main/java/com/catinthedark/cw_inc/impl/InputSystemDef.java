@@ -11,12 +11,14 @@ public class InputSystemDef extends AbstractSystemDef {
     private final Sys sys = new Sys();
     public final Port<Nothing> keyEnter = asyncPort(sys::onEnter);
     public final Port<Nothing> menuEnter = serialPort(sys::menuEnter);
-    public final Pipe<Nothing> onKeyUp = new Pipe<>();
+    public final Port<Nothing> onGameStart = serialPort(sys::onGameStart);
+    public final Pipe<Nothing> onKeyW = new Pipe<>();
+    public final Pipe<Nothing> onKeyA = new Pipe<>();
     public final Pipe<Nothing> onKeyEnter = new Pipe<>();
 
     {
-        updater(sys.ifInState(GameState.MENU, sys::keyUpPoll));
-        masterDelay = 100;
+        updater(sys.ifInState(GameState.IN_GAME, sys::moveKeysPoll));
+        masterDelay = 20;
     }
 
     private class Sys {
@@ -29,9 +31,11 @@ public class InputSystemDef extends AbstractSystemDef {
 
         public GameState state = GameState.INIT;
 
-        void keyUpPoll(long globalTime, long delay) throws InterruptedException {
-            if (Gdx.input.isKeyPressed(Input.Keys.UP))
-                onKeyUp.write(Nothing.NONE);
+        void moveKeysPoll(long globalTime, long delay) throws InterruptedException {
+            if (Gdx.input.isKeyPressed(Input.Keys.D))
+                onKeyW.write(Nothing.NONE);
+            if (Gdx.input.isKeyPressed(Input.Keys.A))
+                onKeyA.write(Nothing.NONE);
         }
 
         void onEnter(long globalTime, Nothing ignored) throws InterruptedException {
@@ -40,6 +44,10 @@ public class InputSystemDef extends AbstractSystemDef {
 
         void menuEnter(long globalTime, Nothing ignored) {
             state = GameState.MENU;
+        }
+
+        void onGameStart(long globalTime, Nothing ignored) {
+            state = GameState.IN_GAME;
         }
     }
 }

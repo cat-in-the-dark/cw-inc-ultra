@@ -20,14 +20,20 @@ public class CwInc extends ApplicationAdapter {
         SharedMemory<Vector2> entitiesShared = new SharedMemory<>(Vector2.class, 100);
 
         final ViewSystemDef viewSystem = new ViewSystemDef(entitiesShared.reader);
-        // final InputSystemDef inputSystem = new InputSystemDef();
+        final InputSystemDef inputSystem = new InputSystemDef();
         final PuppetMasterDef puppetMaster = new PuppetMasterDef();
         final PhysicsSystemDef physicsSystem = new PhysicsSystemDef(entitiesShared.writer);
+        //final CameraSwitcherDef cameraSwitch = new CameraSwitcherDef(entitiesShared.reader);
 
         puppetMaster.onMenuEnter.connect(viewSystem.onMenuEnter);
-        puppetMaster.onGameStart.connect(physicsSystem.onGameStart, viewSystem.onGameStart);
-        //inputSystem.onKeyUp.connect(viewSystem.cameraUp);
+        puppetMaster.onGameStart.connect(inputSystem.onGameStart,
+                physicsSystem.onGameStart,
+                viewSystem.onGameStart);
         physicsSystem.entityCreated.connect(viewSystem.newEntity);
+        physicsSystem.playerCreated.connect(viewSystem.playerCreated);
+        inputSystem.onKeyW.connect(physicsSystem.playerMoveRight);
+        inputSystem.onKeyA.connect(physicsSystem.playerMoveLeft);
+
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
@@ -45,7 +51,7 @@ public class CwInc extends ApplicationAdapter {
             }
         });
 
-        //Launcher.inThread(inputSystem);
+        Launcher.inThread(inputSystem);
         runner = Launcher.viaCallback(viewSystem);
         Launcher.inThread(puppetMaster);
         Launcher.inThread(physicsSystem);

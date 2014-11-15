@@ -13,6 +13,9 @@ import java.util.List;
  */
 public class RenderShared {
     public final Camera camera = new OrthographicCamera(1024, 640);
+    public final OrthographicCamera backgroundCamera = new OrthographicCamera(32, 20);
     public SharedMemory<Vector2>.Reader entities;
     public final List<Integer> entityPointers = new ArrayList<>();
+    public Integer playerPointer = null;
+    public Vector2 playerPos = null;
 }

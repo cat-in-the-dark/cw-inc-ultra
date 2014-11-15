@@ -29,7 +29,7 @@ public class Pipe<T> {
                 index++;
                 if (index >= ports.size())
                     return;
-                System.out.println(toString() + ": write to port " + index);
+                //System.out.println(toString() + ": write to port " + index);
                 ports.get(index).write(msg, this);
             }
         }.run();

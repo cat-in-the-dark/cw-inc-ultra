@@ -16,11 +16,16 @@ public abstract class Screen<T> {
         this.ttl = ttl;
     }
 
-    public void beforeShow(){
+    public void beforeShow() {
+
+    }
+
+    public void beforeRender() {
 
     }
 
     public void render(T shared) {
+        beforeRender();
         for (Layer layer : layers)
             layer.render(shared);
     }
