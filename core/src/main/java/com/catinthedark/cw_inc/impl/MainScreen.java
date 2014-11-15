@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.catinthedark.cw_inc.lib.view.Layer;
 import com.catinthedark.cw_inc.lib.view.Screen;
 
@@ -25,6 +26,14 @@ public class MainScreen extends Screen<RenderShared> {
                 batch.setProjectionMatrix(shared.camera.combined);
                 batch.begin();
                 batch.draw(img, 0, 0);
+
+                shared.entityPointers.forEach(p -> {
+                    if (shared.entities == null)
+                        throw new RuntimeException("shared is null??");
+
+                    Vector2 pos = shared.entities.map(p);
+                    batch.draw(Assets.textures.heartReg, pos.x, pos.y, 16, 16);
+                });
                 batch.end();
             }
 
