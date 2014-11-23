@@ -2,6 +2,7 @@ package com.catinthedark.cw_inc.impl;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.catinthedark.cw_inc.impl.level.LevelMatrix;
 import com.catinthedark.cw_inc.lib.AbstractSystemDef;
 import com.catinthedark.cw_inc.lib.Nothing;
 import com.catinthedark.cw_inc.lib.Port;
@@ -12,8 +13,8 @@ import com.catinthedark.cw_inc.lib.view.ScreenManager;
  * Created by over on 11.11.14.
  */
 public class ViewSystemDef extends AbstractSystemDef {
-    public ViewSystemDef(SharedMemory<Vector2>.Reader entites) {
-        Sys sys = new Sys(entites);
+    public ViewSystemDef(SharedMemory<Vector2>.Reader entites, LevelMatrix.View levelView) {
+        Sys sys = new Sys(entites, levelView);
         updater(sys::threadLocal);
         updater(sys::cameraMove);
         updater(sys::render);
@@ -29,12 +30,13 @@ public class ViewSystemDef extends AbstractSystemDef {
     public final Port<Integer> playerCreated;
 
     private class Sys {
-        public Sys(SharedMemory<Vector2>.Reader entites) {
+        public Sys(SharedMemory<Vector2>.Reader entites, LevelMatrix.View levelView) {
             shared = new RenderShared();
             shared.camera.update();
             if (entites == null)
                 throw new RuntimeException("entities is null?? wtf");
             shared.entities = entites;
+            shared.levelView = levelView;
             manager = new ScreenManager<>(shared, new LogoScreen(), new MenuScreen(), new
                     GameScreen());
         }

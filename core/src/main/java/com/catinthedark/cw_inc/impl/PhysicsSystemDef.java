@@ -46,14 +46,14 @@ public class PhysicsSystemDef extends AbstractSystemDef {
 
         void onGameStart(long globalTime, Nothing ignored) throws InterruptedException {
             System.out.println("Physics: on menu enter");
+            playerPointer = entities.alloc(new Vector2(0, 64));
+            playerCreated.write(playerPointer);
+            
             for (int i = 0; i < 10; i++) {
                 int pointer = entities.alloc(new Vector2(rand.nextInt(1024), rand.nextInt(640)));
                 pointers.add(pointer);
                 entityCreated.write(pointer);
             }
-
-            playerPointer = entities.alloc(new Vector2(0, 64));
-            playerCreated.write(playerPointer);
 
             state = GameState.IN_GAME;
         }

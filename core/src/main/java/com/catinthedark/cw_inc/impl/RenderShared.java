@@ -3,6 +3,7 @@ package com.catinthedark.cw_inc.impl;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
+import com.catinthedark.cw_inc.impl.level.LevelMatrix;
 import com.catinthedark.cw_inc.lib.SharedMemory;
 
 import java.util.ArrayList;
@@ -18,4 +19,5 @@ public class RenderShared {
     public final List<Integer> entityPointers = new ArrayList<>();
     public Integer playerPointer = null;
     public Vector2 playerPos = null;
+    public LevelMatrix.View levelView = null;
 }
