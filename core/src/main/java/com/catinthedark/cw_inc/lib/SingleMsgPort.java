@@ -25,7 +25,7 @@ public class SingleMsgPort<T> implements Port<T> {
     @Override
     public void write(T msg, RunnableEx onWrite) throws InterruptedException {
         queue.offer(() -> {
-            fn.dispatch(0, msg);
+            fn.dispatch(msg);
         });
         onWrite.run();
 

@@ -15,7 +15,7 @@ public class SerialPort<T> implements Port<T> {
     @Override
     public void write(T msg, RunnableEx onWrite) {
         systemDef.masterQueue.add(() -> {
-            fn.dispatch(0, msg);
+            fn.dispatch(msg);
             onWrite.run();
         });
     }

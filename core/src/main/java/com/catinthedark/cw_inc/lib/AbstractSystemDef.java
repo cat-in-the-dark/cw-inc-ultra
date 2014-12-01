@@ -57,7 +57,7 @@ public abstract class AbstractSystemDef {
 
     void update() throws InterruptedException {
         for (Updater updater : updaters)
-            updater.fn.doLogic(0, 0);
+            updater.fn.doLogic(0);
 
         NoArgFunction<RunnableEx> queueOp;
         if (isQueueBlocking)

@@ -56,6 +56,8 @@ nb-configuration.xml
 
 ## Gradle
 
+#idea gradle
+gradle/
 .gradle
 build/
 

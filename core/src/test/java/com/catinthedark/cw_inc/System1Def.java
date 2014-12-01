@@ -15,7 +15,7 @@ public class System1Def extends AbstractSystemDef {
     public final Port<String> messagePoll = asyncPort(new Sys()::onMessage);
 
     private class Sys {
-        private void onMessage(long globalTime, String msg) throws InterruptedException {
+        private void onMessage(String msg) throws InterruptedException {
             System.out.println("Sys1: Got message: " + msg);
             System.out.println("Sys1: Stopping sys thread!");
             throw new InterruptedException("well done!");

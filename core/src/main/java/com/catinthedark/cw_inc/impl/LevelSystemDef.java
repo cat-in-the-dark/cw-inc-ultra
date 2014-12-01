@@ -62,7 +62,7 @@ public class LevelSystemDef extends AbstractSystemDef {
         }
 
 
-        public void createLevel(long globalTime, long delta) {
+        public void createLevel(float delta) {
             if (state != GameState.IN_GAME)
                 return;
 
@@ -70,7 +70,7 @@ public class LevelSystemDef extends AbstractSystemDef {
                 addPreset();
         }
 
-        public void onGameStart(long globalTime, Nothing ignored) {
+        public void onGameStart(Nothing ignored) {
             //matrix.reset
             IntStream.range(1, 3).forEach(i -> addPreset());
             state = GameState.IN_GAME;

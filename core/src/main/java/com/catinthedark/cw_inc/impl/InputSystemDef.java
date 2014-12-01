@@ -23,30 +23,30 @@ public class InputSystemDef extends AbstractSystemDef {
 
     private class Sys {
         public LogicalFunction ifInState(GameState _state, LogicalFunction fn) {
-            return (long globalTime, long delay) -> {
+            return (float delay) -> {
                 if (state == _state)
-                    fn.doLogic(globalTime, delay);
+                    fn.doLogic(delay);
             };
         }
 
         public GameState state = GameState.INIT;
 
-        void moveKeysPoll(long globalTime, long delay) throws InterruptedException {
+        void moveKeysPoll(float delay) throws InterruptedException {
             if (Gdx.input.isKeyPressed(Input.Keys.D))
                 onKeyW.write(Nothing.NONE);
             if (Gdx.input.isKeyPressed(Input.Keys.A))
                 onKeyA.write(Nothing.NONE);
         }
 
-        void onEnter(long globalTime, Nothing ignored) throws InterruptedException {
+        void onEnter(Nothing ignored) throws InterruptedException {
             onKeyEnter.write(Nothing.NONE);
         }
 
-        void menuEnter(long globalTime, Nothing ignored) {
+        void menuEnter(Nothing ignored) {
             state = GameState.MENU;
         }
 
-        void onGameStart(long globalTime, Nothing ignored) {
+        void onGameStart(Nothing ignored) {
             state = GameState.IN_GAME;
         }
     }

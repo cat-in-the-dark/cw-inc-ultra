@@ -40,11 +40,11 @@ public class PhysicsSystemDef extends AbstractSystemDef {
         GameState state = GameState.INIT;
         final SharedMemory<Vector2>.Writer entities;
 
-        void update(long globalTime, long delay) {
+        void update(float delay) {
             pointers.forEach(p -> entities.map(p).set(rand.nextInt(1024), rand.nextInt(640)));
         }
 
-        void onGameStart(long globalTime, Nothing ignored) throws InterruptedException {
+        void onGameStart(Nothing ignored) throws InterruptedException {
             System.out.println("Physics: on menu enter");
             playerPointer = entities.alloc(new Vector2(0, 64));
             playerCreated.write(playerPointer);
@@ -58,11 +58,11 @@ public class PhysicsSystemDef extends AbstractSystemDef {
             state = GameState.IN_GAME;
         }
 
-        void playerMoveRight(long globalTime, Nothing ignored) {
+        void playerMoveRight(Nothing ignored) {
             entities.map(playerPointer).x += 5;
         }
 
-        void playerMoveLeft(long globalTime, Nothing ignored) {
+        void playerMoveLeft(Nothing ignored) {
             entities.map(playerPointer).x -= 5;
         }
 

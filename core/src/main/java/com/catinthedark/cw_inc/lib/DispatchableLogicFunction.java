@@ -5,5 +5,5 @@ package com.catinthedark.cw_inc.lib;
  */
 @FunctionalInterface
 public interface DispatchableLogicFunction<T> {
-    public void dispatch(long globalTime, T emitted) throws InterruptedException;
+    public void dispatch(T emitted) throws InterruptedException;
 }

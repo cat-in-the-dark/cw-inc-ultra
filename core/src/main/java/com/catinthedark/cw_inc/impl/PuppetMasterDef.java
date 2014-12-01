@@ -36,7 +36,7 @@ public class PuppetMasterDef extends AbstractSystemDef {
     private class Sys {
         GameState state = GameState.INIT;
 
-        void onKeyEnter(long globalTime, Nothing ignored) throws InterruptedException {
+        void onKeyEnter(Nothing ignored) throws InterruptedException {
             if (state == GameState.MENU) {
                 System.out.println("puppet:broadcast GAME_START");
                 onGameStart.write(Nothing.NONE);

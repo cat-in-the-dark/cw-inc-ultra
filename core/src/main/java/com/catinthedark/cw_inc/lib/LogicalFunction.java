@@ -5,5 +5,5 @@ package com.catinthedark.cw_inc.lib;
  */
 @FunctionalInterface
 public interface LogicalFunction {
-    void doLogic(long globalTime, long delay) throws InterruptedException;
+    void doLogic(float delay) throws InterruptedException;
 }

@@ -45,15 +45,15 @@ public class ViewSystemDef extends AbstractSystemDef {
         final ScreenManager<RenderShared> manager;
 
 
-        void render(long globalTime, long delay) {
+        void render(float delay) {
             manager.render(shared);
         }
 
-        void menuEnter(long globalTime, Nothing ignored) {
+        void menuEnter(Nothing ignored) {
             manager.goTo(1);
         }
 
-        void onGameStart(long globalTime, Nothing ignored) {
+        void onGameStart(Nothing ignored) {
             shared.camera.position.set(512, 320, 0);
             shared.backgroundCamera.position.set(16, 10, 0);
             shared.camera.update();
@@ -61,22 +61,22 @@ public class ViewSystemDef extends AbstractSystemDef {
             manager.goTo(2);
         }
 
-        void newEntity(long globalTime, int pointer) {
+        void newEntity(int pointer) {
             System.out.println("Get entity with id:" + pointer);
             shared.entityPointers.add(pointer);
         }
 
-        void threadLocal(long globalTime, long delay) {
+        void threadLocal(float delay) {
             if (shared.playerPointer != null)
                 shared.playerPos = shared.entities.map(shared.playerPointer).cpy();
         }
 
 
-        void playerCreated(long globalTime, int pointer) {
+        void playerCreated(int pointer) {
             shared.playerPointer = pointer;
         }
 
-        void cameraMove(long globalTime, long delay) {
+        void cameraMove(float delay) {
             if (shared.playerPointer == null)
                 return;
 
