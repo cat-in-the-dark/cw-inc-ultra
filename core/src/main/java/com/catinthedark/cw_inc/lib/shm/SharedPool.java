@@ -26,9 +26,7 @@ public class SharedPool<T> {
     }
 
     public int alloc(T data) {
-        System.out.println("alloc:poll");
         int pointer = pointerPool.poll();
-        System.out.println("after alloc:poll");
         memory[pointer] = data;
         return pointer;
     }
@@ -39,8 +37,8 @@ public class SharedPool<T> {
     }
 
     public void free(int pointer) {
-        System.out.println("free:" + pointer);
+        //System.out.println("free:" + pointer);
         pointerPool.add(pointer);
-        System.out.print("pointers:" + pointerPool);
+        //System.out.print("pointers:" + pointerPool);
     }
 }

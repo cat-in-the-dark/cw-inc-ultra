@@ -42,7 +42,7 @@ public class ViewSystemDef extends AbstractSystemDef {
             shared.camera.update();
             shared.gShared = pShared;
             shared.levelView = levelView;
-            manager = new ScreenManager<>(shared, new LogoScreen(), new MenuScreen(), new
+            manager = new ScreenManager<>(new LogoScreen(), new MenuScreen(), new
                     GameScreen());
         }
 

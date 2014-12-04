@@ -73,7 +73,7 @@ public class Launcher {
         final List<SystemTask> tasks = prepare(systems);
         tasks.forEach(t -> t.system.start());
 
-        return (CallbackRunner) (delay) -> {
+        return (delay) -> {
             for (SystemTask task : tasks) {
                 Thread.sleep(task.delay);
                 task.system.update(delay);

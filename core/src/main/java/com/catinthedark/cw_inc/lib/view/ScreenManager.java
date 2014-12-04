@@ -7,12 +7,10 @@ import java.util.List;
  * Created by over on 12.11.14.
  */
 public class ScreenManager<T> {
-    private final T shared;
     private final List<Screen<T>> screens;
     private Screen<T> current;
 
-    public ScreenManager(T shared, Screen<T>... screens) {
-        this.shared = shared;
+    public ScreenManager(Screen<T>... screens) {
         this.screens = Arrays.asList(screens);
         current = screens[0];
     }
