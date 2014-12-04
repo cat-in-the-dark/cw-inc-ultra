@@ -14,7 +14,6 @@ import com.catinthedark.cw_inc.impl.common.DirectionX;
 public class PlayerRender {
         private boolean blink = false;
         private int blinkCount = 0;
-        private int wifiRayOffset = 0;
         private float stateTime = 0;
 
 
@@ -98,7 +97,7 @@ public class PlayerRender {
 
             // draw shot
            if(shared.playerAttack != null){
-               boolean res = shared.playerAttack.render(shared, batch);
+               boolean res = shared.playerAttack.render(batch);
                if(!res)
                    shared.playerAttack = null;
            }

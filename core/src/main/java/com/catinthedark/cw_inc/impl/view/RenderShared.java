@@ -20,7 +20,7 @@ public class RenderShared {
     public final List<Integer> botsPointers = new ArrayList<>();
     public Vector2 playerPos = null;
     public boolean animatePlayerMove = false;
-    public Renderable<RenderShared> playerAttack;
+    public Renderable playerAttack;
     public LevelMatrix.View levelView = null;
     public float delay = 0;
 }

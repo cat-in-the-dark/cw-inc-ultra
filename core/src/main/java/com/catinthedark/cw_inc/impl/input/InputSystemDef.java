@@ -8,6 +8,7 @@ import com.catinthedark.cw_inc.impl.common.DirectionY;
 import com.catinthedark.cw_inc.impl.common.GameShared;
 import com.catinthedark.cw_inc.impl.common.GameState;
 import com.catinthedark.cw_inc.lib.*;
+import static com.catinthedark.cw_inc.lib.SysUtils.conditional;
 
 /**
  * Created by over on 11.11.14.
@@ -21,63 +22,57 @@ public class InputSystemDef extends AbstractSystemDef {
     public final Pipe<Nothing> onKeySpace = new Pipe<>();
     public final Pipe<Nothing> onPlayerAttack = new Pipe<>();
 
-    public InputSystemDef(GameShared gameShared){
+    public InputSystemDef(GameShared gameShared) {
         sys = new Sys(gameShared);
-        updater(sys.ifInState(GameState.IN_GAME, sys::moveKeysPoll));
-        updater(sys.ifInState(GameState.IN_GAME, sys::spaceKeyPoll));
+        updater(conditional(() -> sys.state == GameState.IN_GAME, sys::moveKeysPoll));
+        updater(conditional(() -> sys.state == GameState.IN_GAME, sys::spaceKeyPoll));
         menuEnter = serialPort(sys::menuEnter);
         masterDelay = 20;
     }
 
     private class Sys {
-        public LogicalFunction ifInState(GameState _state, LogicalFunction fn) {
-            return (float delay) -> {
-                if (state == _state)
-                    fn.doLogic(delay);
-            };
-        }
-
         boolean canAttack = true;
         final GameShared gameShared;
 
-        Sys(GameShared gameShared){
+        Sys(GameShared gameShared) {
             this.gameShared = gameShared;
             Gdx.input.setInputProcessor(new InputAdapter() {
-                boolean handleKeyDown(int keycode){
+                boolean handleKeyDown(int keycode) {
                     try {
                         if (keycode == Input.Keys.ENTER) {
-                                if(state == GameState.MENU)
-                                    _startGame();
-                                else if(sys.state == GameState.IN_GAME)
-                                    _playerAttack();
+                            if (state == GameState.MENU)
+                                _startGame();
+                            else if (sys.state == GameState.IN_GAME)
+                                _playerAttack();
                             return true;
                         }
-                        if(keycode == Input.Keys.W){
+                        if (keycode == Input.Keys.W) {
                             gameShared.pDirection.update((d) -> d.dirY = DirectionY.UP);
                             return true;
                         }
-                        if(keycode == Input.Keys.S){
+                        if (keycode == Input.Keys.S) {
                             gameShared.pDirection.update((d) -> d.dirY = DirectionY.DOWN);
                             return true;
                         }
-                    }catch (InterruptedException ex){
+                    } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
 
                     return false;
                 }
-                boolean handleKeyUp(int keycode){
-                        if(keycode == Input.Keys.W || keycode == Input.Keys.S){
-                            gameShared.pDirection.update((d) -> d.dirY = DirectionY.MIDDLE);
-                            return true;
-                        }
+
+                boolean handleKeyUp(int keycode) {
+                    if (keycode == Input.Keys.W || keycode == Input.Keys.S) {
+                        gameShared.pDirection.update((d) -> d.dirY = DirectionY.MIDDLE);
+                        return true;
+                    }
 
                     return false;
                 }
 
                 @Override
                 public boolean keyDown(int keycode) {
-                   return handleKeyDown(keycode);
+                    return handleKeyDown(keycode);
                 }
 
                 @Override
@@ -89,14 +84,14 @@ public class InputSystemDef extends AbstractSystemDef {
 
         GameState state;
 
-        void _startGame() throws InterruptedException{
+        void _startGame() throws InterruptedException {
             state = GameState.IN_GAME;
             gameShared.pDirection.update((d) -> d.dirX = DirectionX.RIGHT);
             onGameStart.write(Nothing.NONE);
         }
 
-        void _playerAttack() throws InterruptedException{
-            if(canAttack) {
+        void _playerAttack() throws InterruptedException {
+            if (canAttack) {
                 onPlayerAttack.write(Nothing.NONE);
                 canAttack = false;
                 defer(() -> canAttack = true, 1500);
@@ -109,7 +104,7 @@ public class InputSystemDef extends AbstractSystemDef {
                 onKeyD.write(Nothing.NONE);
                 gameShared.pDirection.update((d) -> d.dirX = DirectionX.RIGHT);
             }
-            if (Gdx.input.isKeyPressed(Input.Keys.A)){
+            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                 onKeyA.write(Nothing.NONE);
                 gameShared.pDirection.update((d) -> d.dirX = DirectionX.LEFT);
             }
@@ -117,7 +112,7 @@ public class InputSystemDef extends AbstractSystemDef {
 
 
         void spaceKeyPoll(float delay) throws InterruptedException {
-            if(Gdx.input.isKeyPressed(Input.Keys.SPACE))
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE))
                 onKeySpace.write(Nothing.NONE);
         }
 

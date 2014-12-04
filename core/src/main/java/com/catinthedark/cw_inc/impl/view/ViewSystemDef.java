@@ -111,12 +111,12 @@ public class ViewSystemDef extends AbstractSystemDef {
         }
 
         void playerAttack(Nothing ignored){
-            shared.playerAttack = new Renderable<RenderShared>() {
+            shared.playerAttack = new Renderable() {
                 int wifiRayOffset;
                 float stateTime = 0;
 
                 @Override
-                public boolean render(RenderShared shared, SpriteBatch batch) {
+                public boolean render(SpriteBatch batch) {
                     stateTime += shared.delay;
 
                     wifiRayOffset += 4;
