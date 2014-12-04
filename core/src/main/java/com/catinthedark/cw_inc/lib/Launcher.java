@@ -44,6 +44,7 @@ public class Launcher {
 
         Thread thread = new Thread(new Runnable() {
             boolean running = true;
+            long lastStep = System.currentTimeMillis();
 
             @Override
             public void run() {
@@ -53,11 +54,12 @@ public class Launcher {
                     try {
                         for (SystemTask task : tasks) {
                             Thread.sleep(task.delay);
-                            task.system.update(0);
+                            task.system.update(((float)(System.currentTimeMillis() - lastStep))/1000f);
                         }
                     } catch (InterruptedException ex) {
                         running = false;
                     }
+                    lastStep = System.currentTimeMillis();
                 }
             }
         });

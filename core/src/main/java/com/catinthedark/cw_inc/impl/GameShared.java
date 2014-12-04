@@ -22,6 +22,6 @@ public class GameShared {
     public  final SharedVal<Vector2> pVelocity = new SharedVal<>(new Vector2(0,0));
     public final SharedVal<Direction> pDirection = new SharedVal<>(new Direction(DirectionX.RIGHT, DirectionY.MIDDLE));
     public  final SharedArray<Vector2> cableDots = new SharedArray<>(allocCableBlocks());
-    public final SharedPool<BotPhysicsData> bots = new SharedPool<>(BotPhysicsData.class, 100);
+    public final SharedPool<BotPhysicsData> bots = new SharedPool<>(BotPhysicsData.class, 20);
 
 }

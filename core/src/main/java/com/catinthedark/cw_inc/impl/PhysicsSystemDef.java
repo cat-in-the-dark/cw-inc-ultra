@@ -17,6 +17,7 @@ public class PhysicsSystemDef extends AbstractSystemDef {
     public PhysicsSystemDef(GameShared shared) {
         masterDelay = 16;
         botCreated = new Pipe<>();
+        botKilled = new Pipe<>(this);
 
         Sys sys = new Sys(shared);
         updater(conditional(() -> sys.state == GameState.IN_GAME, sys::update));
@@ -26,25 +27,24 @@ public class PhysicsSystemDef extends AbstractSystemDef {
         playerJump = asyncPort(sys::playerJump);
         onCreateBlock = asyncPort(sys::createBlock);
         onCreateBot = asyncPort(sys::createBot);
-        //playerAttack = asyncPort(sys::playerAttack);
+        playerAttack = asyncPort(sys::playerAttack);
     }
 
+    public final Port<Vector2> onCreateBot;
     public final Pipe<Integer> botCreated;
+    public final Pipe<Integer> botKilled;
     public final Port<Nothing> onGameStart;
     public final Port<Nothing> playerMoveRight;
     public final Port<Nothing> playerMoveLeft;
     public final Port<Nothing> playerJump;
     public final Port<BlockCreateReq> onCreateBlock;
-    public final Port<Vector2> onCreateBot;
-    //public final Port<Nothing> playerAttack;
+    public final Port<Nothing> playerAttack;
 
     private class Sys {
         public Sys(GameShared shared) {
             this.shared = shared;
         }
 
-        final List<Integer> pointers = new ArrayList<>();
-        final Random rand = new Random(System.nanoTime());
         GameState state = GameState.INIT;
         GameShared shared;
         World world;
@@ -54,28 +54,85 @@ public class PhysicsSystemDef extends AbstractSystemDef {
 
         Body playerBody;
         boolean isPlayerOnFloor = true;
+        boolean playerInAttack = false;
         Cable cable;
         final Map<Long, Body> blocks = new HashMap<>();
         final Map<Integer, Body> bots = new HashMap<>();
 
-        void update(float delay) {
-            world.step(1.0f / 60, 6, 10);
-            if(playerBody.getPosition().x > frontEdge) {
+        void update(float delta) {
+            world.step(delta, 6, 300);
+            //detect allowed for player space
+            if (playerBody.getPosition().x > frontEdge) {
                 frontEdge = playerBody.getPosition().x;
-                backEdge = frontEdge - (16+4) < 0 ? 0: frontEdge - (16+4);
+                backEdge = frontEdge - (16 + 4) < 0 ? 0 : frontEdge - (16 + 4);
             }
 
+            //broadcast player position
             shared.pPos.update(pos -> pos.set(playerBody.getPosition()));
 
-            for(int idx = 0; idx < cable.getBodyList().size(); idx++) {
+            //broadcast player cable blocks position
+            for (int idx = 0; idx < cable.getBodyList().size(); idx++) {
                 final Vector2 blockPos = cable.getBodyList().get(idx).getPosition();
                 shared.cableDots.update(idx, pos -> pos.set(blockPos));
             }
 
+            //broadcast bots positions
             bots.entrySet().forEach((kv) -> {
                 int id = kv.getKey();
                 shared.bots.update(id, data -> data.pos.set(kv.getValue().getPosition()));
             });
+
+            if (playerInAttack) {
+                //raycast via bots
+                Vector2 fireTo = new Vector2();
+                Vector2 pPos = playerBody.getPosition();
+
+                if (shared.pDirection.get().dirX == DirectionX.RIGHT)
+                    fireTo.x = pPos.x + 8;
+                else
+                    fireTo.x = pPos.x - 8;
+
+                switch (shared.pDirection.get().dirY) {
+                    case UP:
+                        fireTo.y = pPos.y + 8;
+                        break;
+                    case MIDDLE:
+                        fireTo.y = pPos.y;
+                        break;
+                    case DOWN:
+                        fireTo.y = pPos.y - 8;
+                        break;
+                }
+
+                world.rayCast((fixture, point, normal, fraction) -> {
+                    if (fixture.getUserData() == null)
+                        return -1;
+
+                    if (fixture.getUserData().getClass() == BotUserData.class) {
+                        BotUserData data = (BotUserData) fixture.getUserData();
+                        data.health -= delta;
+                        //System.out.print("Bot with id:" + data.id + "on damage!");
+                        if (data.health < 0) {
+                            if(!data.killed) {
+                                defer(() -> {
+                                    System.out.println("Bot with id:" + data.id + "died!");
+                                    botKilled.write(data.id, () -> {
+                                        System.out.println("World locked? =>" + world.isLocked());
+                                        Body botBody = bots.get(data.id);
+                                        world.destroyBody(botBody);
+                                        bots.remove(data.id);
+                                        shared.bots.free(data.id);
+                                    });
+                                }, 0);
+                                data.killed = true;
+                            }
+                        }
+                    }
+
+                    return -1;
+                }, pPos, fireTo);
+            }
+
         }
 
 
@@ -142,7 +199,7 @@ public class PhysicsSystemDef extends AbstractSystemDef {
             playerBody = world.createBody(bodyDef);
             Fixture pFix = playerBody.createFixture(playerShape, 0.1f);
             pFix.setUserData(new PlayerData());
-            cable  = new Cable(world, new Vector2(5, 5), 1.0f, Constants.CABLE_SEGS);
+            cable = new Cable(world, new Vector2(5, 5), 1.0f, Constants.CABLE_SEGS);
 
             RevoluteJointDef jointDef = new RevoluteJointDef();
             jointDef.bodyA = playerBody;
@@ -161,7 +218,7 @@ public class PhysicsSystemDef extends AbstractSystemDef {
 
         void onGameStart(Nothing ignored) throws InterruptedException {
             System.out.println("Physics: on game start");
-            if(world != null)
+            if (world != null)
                 world.dispose();
             world = new World(new Vector2(0, Constants.WORLD_GRAVITY), true);
 
@@ -186,7 +243,7 @@ public class PhysicsSystemDef extends AbstractSystemDef {
         }
 
         void playerJump(Nothing ignored) {
-            if(isPlayerOnFloor){
+            if (isPlayerOnFloor) {
                 playerBody.applyLinearImpulse(Constants.JUMP_IMPULSE,
                         playerBody.getPosition(), true);
             }
@@ -237,7 +294,9 @@ public class PhysicsSystemDef extends AbstractSystemDef {
             blocks.put(req.id, blockBody);
         }
 
-        void createBot(Vector2 deployTo) throws InterruptedException{
+        void createBot(Vector2 deployTo) throws InterruptedException {
+            int pointer = shared.bots.alloc(new BotPhysicsData(deployTo.cpy(), new Vector2()));
+
             CircleShape crabShape = new CircleShape();
             crabShape.setRadius(Constants.CRAB_WIDTH / 2);
             BodyDef bodyDef = new BodyDef();
@@ -246,11 +305,15 @@ public class PhysicsSystemDef extends AbstractSystemDef {
             bodyDef.position.set(deployTo);
             Body body = world.createBody(bodyDef);
             body.createFixture(crabShape, 1.0f)
-                    .setUserData(new BotUserData());
+                    .setUserData(new BotUserData(pointer, 1));
 
-            int pointer = shared.bots.alloc(new BotPhysicsData(deployTo.cpy(), new Vector2()));
-            botCreated.write(pointer);
             bots.put(pointer, body);
+            botCreated.write(pointer);
+        }
+
+        void playerAttack(Nothing ignored) {
+            playerInAttack = true;
+            defer(() -> playerInAttack = false, 1200);
         }
 
     }

@@ -22,12 +22,14 @@ public class ViewSystemDef extends AbstractSystemDef {
         onMenuEnter = serialPort(sys::menuEnter);
         onGameStart = serialPort(sys::onGameStart);
         newBot = asyncPort(sys::newBot);
+        botKilled = serialPort(sys::botKilled);
         playerAttack = asyncPort(sys::playerAttack);
     }
 
     public final Port<Nothing> onMenuEnter;
     public final Port<Nothing> onGameStart;
     public final Port<Integer> newBot;
+    public final Port<Integer> botKilled;
     public final Port<Nothing> playerAttack;
 
     private class Sys {
@@ -57,8 +59,13 @@ public class ViewSystemDef extends AbstractSystemDef {
         }
 
         void newBot(int pointer) {
-            System.out.println("Get entity with id:" + pointer);
+            System.out.println("View:Get bot with id:" + pointer);
             shared.botsPointers.add(pointer);
+        }
+
+        void botKilled(int pointer){
+            System.out.println("View:Kill bot with id:" + pointer);
+            shared.botsPointers.remove((Object)pointer);
         }
 
 

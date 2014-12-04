@@ -16,7 +16,7 @@ public class SharedPool<T> {
 
     public SharedPool(Class<? extends T> clazz, int size) {
         memory = (T[]) Array.newInstance(clazz, size);
-        pointerPool = IntStream.rangeClosed(1, size)
+        pointerPool = IntStream.rangeClosed(0, size - 1)
                 .boxed()
                 .collect(Collectors.toCollection(() -> new LinkedList<>()));
     }
@@ -39,6 +39,8 @@ public class SharedPool<T> {
     }
 
     public void free(int pointer) {
+        System.out.println("free:" + pointer);
         pointerPool.add(pointer);
+        System.out.print("pointers:" + pointerPool);
     }
 }

@@ -27,11 +27,12 @@ public class CwInc extends ApplicationAdapter {
         levelSystem.createBlock.connect(physicsSystem.onCreateBlock);
         levelSystem.createBot.connect(physicsSystem.onCreateBot);
         physicsSystem.botCreated.connect(viewSystem.newBot);
+        physicsSystem.botKilled.connect(viewSystem.botKilled);
 
         inputSystem.onKeyD.connect(physicsSystem.playerMoveRight);
         inputSystem.onKeyA.connect(physicsSystem.playerMoveLeft);
         inputSystem.onKeySpace.connect(physicsSystem.playerJump);
-        inputSystem.onPlayerAttack.connect(viewSystem.playerAttack);
+        inputSystem.onPlayerAttack.connect(viewSystem.playerAttack, physicsSystem.playerAttack);
 
         menuEnter.connect(viewSystem.onMenuEnter, inputSystem.menuEnter);
 

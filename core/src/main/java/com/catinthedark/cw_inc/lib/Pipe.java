@@ -1,5 +1,6 @@
 package com.catinthedark.cw_inc.lib;
 
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,27 +9,58 @@ import java.util.List;
  */
 public class Pipe<T> {
     private final List<Port<T>> ports = new ArrayList<>();
+    private final AbstractSystemDef target;
+
+    public Pipe() {
+        this(null);
+    }
+
+    /**
+     * use this constructor if you want to use
+     * Pipe.write with onSend callback;
+     * callback will be invoked in master queue of target System
+     *
+     * @param target
+     */
+    public Pipe(AbstractSystemDef target) {
+        this.target = target;
+    }
 
     public void connect(Port<T>... ports) {
         for (Port port : ports)
             this.ports.add(port);
     }
 
+    public void write(T msg) throws InterruptedException {
+        write(msg, null);
+    }
+
     /**
      * ^^ recursion
+     * <p>
+     * Be VERY careful with onSend!
+     * onSend will be invoked after data was write to destination port;
+     * for serial port it's equal to 'after message dispatch' ONLY
      *
      * @param msg
      * @throws InterruptedException
      */
-    public void write(T msg) throws InterruptedException {
+    public void write(T msg, RunnableEx onSend) throws InterruptedException {
+        if (onSend != null)
+            if (target == null)
+                throw new RuntimeException("Could not use Pipe.write with onSend with empty target system");
+
         new RunnableEx() {
             int index = -1;
 
             @Override
             public void run() throws InterruptedException {
                 index++;
-                if (index >= ports.size())
+                if (index >= ports.size()) {
+                    if (onSend != null)
+                        target.masterQueue.add(onSend);
                     return;
+                }
                 //System.out.println(toString() + ": write to port " + index);
                 ports.get(index).write(msg, this);
             }
