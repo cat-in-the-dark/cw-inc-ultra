@@ -84,7 +84,7 @@ public class BodyFactory {
         return blockBody;
     }
 
-    public static Body createBot(World world, int pointer, Vector2 deployTo) throws InterruptedException {
+    public static Body createBot(World world, int pointer, Vector2 deployTo) {
         CircleShape crabShape = new CircleShape();
         crabShape.setRadius(Constants.CRAB_WIDTH / 2);
         BodyDef bodyDef = new BodyDef();

@@ -33,7 +33,7 @@ public class Pipe<T> {
             this.ports.add(port);
     }
 
-    public void write(T msg) throws InterruptedException {
+    public void write(T msg) {
         write(msg, null);
     }
 
@@ -47,16 +47,16 @@ public class Pipe<T> {
      * @param msg
      * @throws InterruptedException
      */
-    public void write(T msg, RunnableEx onSend) throws InterruptedException {
+    public void write(T msg, RunnableEx onSend){
         if (onSend != null)
             if (target == null)
                 throw new RuntimeException("Could not use Pipe.write with onSend with empty target system");
 
-        new RunnableEx() {
+        new Runnable() {
             int index = -1;
 
             @Override
-            public void run() throws InterruptedException {
+            public void run(){
                 index++;
                 if (index >= ports.size()) {
                     if (onSend != null)
@@ -64,7 +64,11 @@ public class Pipe<T> {
                     return;
                 }
                 //System.out.println(toString() + ": write to port " + index);
-                ports.get(index).write(msg, this);
+                try {
+                    ports.get(index).write(msg, this);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         }.run();
     }

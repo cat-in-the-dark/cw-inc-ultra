@@ -14,7 +14,7 @@ public class DirectPort<T> implements Port<T> {
     }
 
     @Override
-    public void write(T msg, RunnableEx onWrite) throws InterruptedException{
+    public void write(T msg, Runnable onWrite) throws InterruptedException{
         fn.apply(msg);
         onWrite.run();
     }

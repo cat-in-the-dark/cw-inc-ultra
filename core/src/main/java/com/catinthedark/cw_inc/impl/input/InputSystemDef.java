@@ -41,33 +41,22 @@ public class InputSystemDef extends AbstractSystemDef {
         Sys(GameShared gameShared) {
             this.gameShared = gameShared;
             Gdx.input.setInputProcessor(new InputAdapter() {
-                boolean handleKeyDown(int keycode) {
-                    try {
-                        if (keycode == Input.Keys.ENTER) {
-                            if (state == GameState.MENU)
-                                _startGame();
-                            else if (sys.state == GameState.IN_GAME)
-                                _playerAttack();
-                            return true;
-                        }
-                        if (keycode == Input.Keys.W) {
-                            gameShared.pDirection.update((d) -> d.dirY = DirectionY.UP);
-                            return true;
-                        }
-                        if (keycode == Input.Keys.S) {
-                            gameShared.pDirection.update((d) -> d.dirY = DirectionY.DOWN);
-                            return true;
-                        }
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace();
+                @Override
+                public boolean keyDown(int keycode) {
+
+                    if (keycode == Input.Keys.ENTER) {
+                        if (state == GameState.MENU)
+                            _startGame();
+                        else if (sys.state == GameState.IN_GAME)
+                            _playerAttack();
+                        return true;
                     }
-
-                    return false;
-                }
-
-                boolean handleKeyUp(int keycode) {
-                    if (keycode == Input.Keys.W || keycode == Input.Keys.S) {
-                        gameShared.pDirection.update((d) -> d.dirY = DirectionY.MIDDLE);
+                    if (keycode == Input.Keys.W) {
+                        gameShared.pDirection.update((d) -> d.dirY = DirectionY.UP);
+                        return true;
+                    }
+                    if (keycode == Input.Keys.S) {
+                        gameShared.pDirection.update((d) -> d.dirY = DirectionY.DOWN);
                         return true;
                     }
 
@@ -75,26 +64,26 @@ public class InputSystemDef extends AbstractSystemDef {
                 }
 
                 @Override
-                public boolean keyDown(int keycode) {
-                    return handleKeyDown(keycode);
-                }
-
-                @Override
                 public boolean keyUp(int keycode) {
-                    return handleKeyUp(keycode);
+                    if (keycode == Input.Keys.W || keycode == Input.Keys.S) {
+                        gameShared.pDirection.update((d) -> d.dirY = DirectionY.MIDDLE);
+                        return true;
+                    }
+
+                    return false;
                 }
             });
         }
 
         GameState state;
 
-        void _startGame() throws InterruptedException {
+        void _startGame() {
             state = GameState.IN_GAME;
             gameShared.pDirection.update((d) -> d.dirX = DirectionX.RIGHT);
             onGameStart.write(Nothing.NONE);
         }
 
-        void _playerAttack() throws InterruptedException {
+        void _playerAttack() {
             if (canAttack) {
                 onPlayerAttack.write(Nothing.NONE);
                 canAttack = false;
@@ -115,7 +104,7 @@ public class InputSystemDef extends AbstractSystemDef {
         }
 
 
-        void spaceKeyPoll(float delay) throws InterruptedException {
+        void spaceKeyPoll(float delay) {
             if (Gdx.input.isKeyPressed(Input.Keys.SPACE))
                 onKeySpace.write(Nothing.NONE);
         }

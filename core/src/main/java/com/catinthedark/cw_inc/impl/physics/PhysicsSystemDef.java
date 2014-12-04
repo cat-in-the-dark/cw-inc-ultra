@@ -122,16 +122,14 @@ public class PhysicsSystemDef extends AbstractSystemDef {
                         //System.out.print("Bot with id:" + data.id + "on damage!");
                         if (data.health < 0) {
                             if (!data.killed) {
-                                defer(() -> {
-                                    System.out.println("Bot with id:" + data.id + "died!");
-                                    botKilled.write(data.id, () -> {
-                                        System.out.println("World locked? =>" + world.isLocked());
-                                        Body botBody = bots.get(data.id);
-                                        world.destroyBody(botBody);
-                                        bots.remove(data.id);
-                                        shared.bots.free(data.id);
-                                    });
-                                }, 0);
+                                System.out.println("Bot with id:" + data.id + "died!");
+                                botKilled.write(data.id, () -> {
+                                    System.out.println("World locked? =>" + world.isLocked());
+                                    Body botBody = bots.get(data.id);
+                                    world.destroyBody(botBody);
+                                    bots.remove(data.id);
+                                    shared.bots.free(data.id);
+                                });
                                 data.killed = true;
                             }
                         }
@@ -144,7 +142,7 @@ public class PhysicsSystemDef extends AbstractSystemDef {
         }
 
 
-        void _createPlayer() throws InterruptedException {
+        void _createPlayer() {
             cable = new Cable(world, new Vector2(5, 5), 1.0f, Constants.CABLE_SEGS);
             playerBody = BodyFactory.createPlayer(world, cable);
         }
@@ -187,7 +185,7 @@ public class PhysicsSystemDef extends AbstractSystemDef {
             blocks.put(req.id, blockBody);
         }
 
-        void createBot(Vector2 deployTo) throws InterruptedException {
+        void createBot(Vector2 deployTo) {
             int pointer = shared.bots.alloc(new BotPhysicsData(deployTo.cpy(), new Vector2()));
             Body botBody = BodyFactory.createBot(world, pointer, deployTo);
             bots.put(pointer, botBody);

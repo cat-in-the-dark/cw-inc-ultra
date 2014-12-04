@@ -51,7 +51,7 @@ public class LevelSystemDef extends AbstractSystemDef {
             });
         }
 
-        public void addPreset() throws InterruptedException {
+        public void addPreset() {
             System.out.println("add preset!");
             int presetEdge = currentX;
             Preset preset = Preset.easyPresets[rand.nextInt(Preset.easyPresets.length)];
@@ -76,7 +76,7 @@ public class LevelSystemDef extends AbstractSystemDef {
         }
 
 
-        public void createLevel(float delta) throws InterruptedException {
+        public void createLevel(float delta) {
             if (state != GameState.IN_GAME)
                 return;
 
@@ -84,7 +84,7 @@ public class LevelSystemDef extends AbstractSystemDef {
                 addPreset();
         }
 
-        public void onGameStart(Nothing ignored) throws InterruptedException {
+        public void onGameStart(Nothing ignored) {
             //matrix.reset
             //IntStream.range(1, 3).forEach(i -> addPreset());
             for (int i = 0; i < 3; i++)
