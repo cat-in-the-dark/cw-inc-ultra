@@ -5,5 +5,5 @@ package com.catinthedark.cw_inc.lib.common;
  */
 @FunctionalInterface
 public interface LogicalFunction {
-    void doLogic(float delay) throws InterruptedException;
+    void apply(float delay) throws InterruptedException;
 }

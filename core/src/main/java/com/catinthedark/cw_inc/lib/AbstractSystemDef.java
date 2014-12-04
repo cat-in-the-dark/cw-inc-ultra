@@ -56,7 +56,7 @@ public abstract class AbstractSystemDef {
 
     public void update(float delay) throws InterruptedException {
         for (Updater updater : updaters)
-            updater.fn.doLogic(delay);
+            updater.fn.apply(delay);
 
         NoArgFunction<RunnableEx> queueOp;
         if (isQueueBlocking)
@@ -65,7 +65,7 @@ public abstract class AbstractSystemDef {
             queueOp = masterQueue::poll;
 
         RunnableEx runnableEx;
-        while ((runnableEx = queueOp.call()) != null) {
+        while ((runnableEx = queueOp.apply()) != null) {
             //System.out.println("get runnableEx");
             runnableEx.run();
         }

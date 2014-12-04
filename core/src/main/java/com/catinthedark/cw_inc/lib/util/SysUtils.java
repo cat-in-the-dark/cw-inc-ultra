@@ -11,7 +11,7 @@ public class SysUtils {
     public static LogicalFunction conditional(Supplier<Boolean> predicate, LogicalFunction fn) {
         return (delay) -> {
             if (predicate.get())
-                fn.doLogic(delay);
+                fn.apply(delay);
         };
     }
 }

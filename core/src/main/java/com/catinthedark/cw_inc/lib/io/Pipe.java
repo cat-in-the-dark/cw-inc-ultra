@@ -42,7 +42,7 @@ public class Pipe<T> {
      * <p>
      * Be VERY careful with onSend!
      * onSend will be invoked after data was write to destination port;
-     * for serial port it's equal to 'after message dispatch' ONLY
+     * for serial port it's equal to 'after message apply' ONLY
      *
      * @param msg
      * @throws InterruptedException

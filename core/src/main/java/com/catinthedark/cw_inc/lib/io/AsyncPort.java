@@ -19,7 +19,7 @@ public class AsyncPort<T> implements Port<T> {
 
     @Override
     public void write(T msg, RunnableEx onWrite) throws InterruptedException {
-        queue.put(() -> fn.dispatch(msg));
+        queue.put(() -> fn.apply(msg));
         onWrite.run();
     }
 }
