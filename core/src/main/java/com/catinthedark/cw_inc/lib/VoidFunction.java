@@ -1,4 +1,4 @@
-package com.catinthedark.cw_inc.impl;
+package com.catinthedark.cw_inc.lib;
 
 /**
  * Created by over on 04.12.14.

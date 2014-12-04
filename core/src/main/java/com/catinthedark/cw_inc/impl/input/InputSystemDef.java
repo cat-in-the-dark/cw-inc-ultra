@@ -1,8 +1,12 @@
-package com.catinthedark.cw_inc.impl;
+package com.catinthedark.cw_inc.impl.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.catinthedark.cw_inc.impl.common.DirectionX;
+import com.catinthedark.cw_inc.impl.common.DirectionY;
+import com.catinthedark.cw_inc.impl.common.GameShared;
+import com.catinthedark.cw_inc.impl.common.GameState;
 import com.catinthedark.cw_inc.lib.*;
 
 /**

@@ -2,14 +2,23 @@ package com.catinthedark.cw_inc.impl;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.catinthedark.cw_inc.lib.*;
+import com.catinthedark.cw_inc.impl.common.Assets;
+import com.catinthedark.cw_inc.impl.common.GameShared;
+import com.catinthedark.cw_inc.impl.input.InputSystemDef;
+import com.catinthedark.cw_inc.impl.level.LevelSystemDef;
+import com.catinthedark.cw_inc.impl.physics.PhysicsSystemDef;
+import com.catinthedark.cw_inc.impl.view.ViewSystemDef;
+import com.catinthedark.cw_inc.lib.CallbackRunner;
+import com.catinthedark.cw_inc.lib.Launcher;
+import com.catinthedark.cw_inc.lib.Nothing;
+import com.catinthedark.cw_inc.lib.Pipe;
 
 public class CwInc extends ApplicationAdapter {
     private CallbackRunner runner;
 
     @Override
     public void create() {
-        Assets.init(new Config());
+        Assets.init();
 
         GameShared gameShared = new GameShared();
 

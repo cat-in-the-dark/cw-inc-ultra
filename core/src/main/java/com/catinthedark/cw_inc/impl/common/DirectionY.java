@@ -1,4 +1,4 @@
-package com.catinthedark.cw_inc.impl;
+package com.catinthedark.cw_inc.impl.common;
 
 import sun.print.DialogOwner;
 

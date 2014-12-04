@@ -1,4 +1,4 @@
-package com.catinthedark.cw_inc.impl;
+package com.catinthedark.cw_inc.impl.message;
 
 import com.catinthedark.cw_inc.impl.level.BlockType;
 

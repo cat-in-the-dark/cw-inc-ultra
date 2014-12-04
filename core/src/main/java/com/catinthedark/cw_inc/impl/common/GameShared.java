@@ -1,6 +1,7 @@
-package com.catinthedark.cw_inc.impl;
+package com.catinthedark.cw_inc.impl.common;
 
 import com.badlogic.gdx.math.Vector2;
+import com.catinthedark.cw_inc.impl.physics.BotPhysicsData;
 import com.catinthedark.cw_inc.lib.SharedArray;
 import com.catinthedark.cw_inc.lib.SharedPool;
 import com.catinthedark.cw_inc.lib.SharedVal;

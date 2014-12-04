@@ -1,4 +1,4 @@
-package com.catinthedark.cw_inc.impl;
+package com.catinthedark.cw_inc.impl.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -7,7 +7,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.Vector2;
+import com.catinthedark.cw_inc.impl.common.Assets;
+import com.catinthedark.cw_inc.impl.common.Constants;
 import com.catinthedark.cw_inc.impl.level.LevelBlock;
+import com.catinthedark.cw_inc.impl.physics.BotPhysicsData;
 import com.catinthedark.cw_inc.lib.view.Layer;
 import com.catinthedark.cw_inc.lib.view.Screen;
 

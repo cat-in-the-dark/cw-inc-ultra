@@ -1,9 +1,12 @@
-package com.catinthedark.cw_inc.impl;
+package com.catinthedark.cw_inc.impl.view;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.catinthedark.cw_inc.impl.common.Assets;
+import com.catinthedark.cw_inc.impl.common.Constants;
+import com.catinthedark.cw_inc.impl.common.DirectionX;
 
 /**
  * Created by over on 04.12.14.

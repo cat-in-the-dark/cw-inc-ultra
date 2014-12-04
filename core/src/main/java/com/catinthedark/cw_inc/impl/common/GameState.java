@@ -1,4 +1,4 @@
-package com.catinthedark.cw_inc.impl;
+package com.catinthedark.cw_inc.impl.common;
 
 /**
  * Created by over on 14.11.14.

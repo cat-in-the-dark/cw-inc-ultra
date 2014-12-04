@@ -1,4 +1,4 @@
-package com.catinthedark.cw_inc.impl;
+package com.catinthedark.cw_inc.impl.common;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -21,7 +21,7 @@ import java.util.List;
 
 public class Assets {
     private interface Initable {
-        public void init(Config conf);
+        public void init();
     }
 
     public static class Audios implements Initable {
@@ -33,7 +33,7 @@ public class Assets {
         public Sound crabDeath;
 
         @Override
-        public void init(Config conf) {
+        public void init() {
             shot = Gdx.audio
                     .newSound(Gdx.files.internal("sound/shot_sfx.mp3"));
             jump = Gdx.audio
@@ -86,7 +86,7 @@ public class Assets {
         public TiledMapRenderer background;
 
         @Override
-        public void init(Config conf) {
+        public void init() {
             logoTex = new Texture(
                     Gdx.files.internal("texture/logo.png"));
 
@@ -132,13 +132,13 @@ public class Assets {
 
             playerFrames = TextureRegion.split(
                     new Texture(Gdx.files.internal("texture/man.png")),
-                    (int) Constants.PLAYER_WIDTH * conf.UNIT_SIZE,
-                    (int) Constants.PLAYER_HEIGHT * conf.UNIT_SIZE);
+                    (int) Constants.PLAYER_WIDTH * 32,
+                    (int) Constants.PLAYER_HEIGHT * 32);
 
             playerFramesBack = TextureRegion.split(
                     new Texture(Gdx.files.internal("texture/man.png")),
-                    (int) Constants.PLAYER_WIDTH * conf.UNIT_SIZE,
-                    (int) Constants.PLAYER_HEIGHT * conf.UNIT_SIZE);
+                    (int) Constants.PLAYER_WIDTH * 32,
+                    (int) Constants.PLAYER_HEIGHT * 32);
             for (TextureRegion reg : playerFramesBack[0]) {
                 reg.flip(true, false);
             }
@@ -147,12 +147,12 @@ public class Assets {
                     Gdx.files.internal("texture/mushroomed_crab.png"));
             mushroomedCrabFramesLeft = TextureRegion.split(
                     mushroomedCrabSheet,
-                    (int) Constants.MUSHROOMED_CRAB_WIDTH * conf.UNIT_SIZE,
-                    (int) Constants.MUSHROOMED_CRAB_HEIGHT * conf.UNIT_SIZE);
+                    (int) Constants.MUSHROOMED_CRAB_WIDTH * 32,
+                    (int) Constants.MUSHROOMED_CRAB_HEIGHT * 32);
             mushroomedCrabFramesRight = TextureRegion.split(
                     mushroomedCrabSheet,
-                    (int) Constants.MUSHROOMED_CRAB_WIDTH * conf.UNIT_SIZE,
-                    (int) Constants.MUSHROOMED_CRAB_HEIGHT * conf.UNIT_SIZE);
+                    (int) Constants.MUSHROOMED_CRAB_WIDTH * 32,
+                    (int) Constants.MUSHROOMED_CRAB_HEIGHT * 32);
             for (TextureRegion reg : mushroomedCrabFramesRight[0]) {
                 reg.flip(true, false);
             }
@@ -164,7 +164,7 @@ public class Assets {
         public BitmapFont hudFont;
 
         @Override
-        public void init(Config conf) {
+        public void init() {
             FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
                     Gdx.files.internal("font/impact.ttf"));
             FreeTypeFontParameter params = new FreeTypeFontParameter();
@@ -206,7 +206,7 @@ public class Assets {
         }
 
         @Override
-        public void init(Config conf) {
+        public void init() {
 
             playerJump = new Animation(0.05f,
                     selectRegions(textures.playerFrames, new int[]{14, 15}));
@@ -277,10 +277,10 @@ public class Assets {
     public static Fonts fonts = new Fonts();
     public static Animations animations = new Animations();
 
-    public static void init(Config conf) {
-        audios.init(conf);
-        textures.init(conf);
-        fonts.init(conf);
-        animations.init(conf);
+    public static void init() {
+        audios.init();
+        textures.init();
+        fonts.init();
+        animations.init();
     }
 }

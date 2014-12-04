@@ -1,6 +1,8 @@
-package com.catinthedark.cw_inc.impl;
+package com.catinthedark.cw_inc.impl.physics;
 
 import com.badlogic.gdx.physics.box2d.*;
+import com.catinthedark.cw_inc.lib.Launcher;
+import com.catinthedark.cw_inc.lib.VoidFunction;
 
 /**
  * Created by over on 04.12.14.
@@ -46,14 +48,14 @@ public class HitTester implements ContactListener {
 
     @Override
     public void beginContact(Contact contact) {
-        if(query(BlockData.class, PlayerData.class, contact) != null)
+        if(query(BlockUserData.class, PlayerUserData.class, contact) != null)
             onPlayerOnGround.apply(true);
 
     }
 
     @Override
     public void endContact(Contact contact) {
-        if(query(BlockData.class, PlayerData.class, contact) != null)
+        if(query(BlockUserData.class, PlayerUserData.class, contact) != null)
             onPlayerOnGround.apply(false);
     }
 

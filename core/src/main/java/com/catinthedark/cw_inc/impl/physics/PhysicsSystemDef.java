@@ -1,14 +1,24 @@
-package com.catinthedark.cw_inc.impl;
+package com.catinthedark.cw_inc.impl.physics;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
-import com.catinthedark.cw_inc.lib.*;
+import com.catinthedark.cw_inc.impl.common.Constants;
+import com.catinthedark.cw_inc.impl.common.DirectionX;
+import com.catinthedark.cw_inc.impl.common.GameShared;
+import com.catinthedark.cw_inc.impl.common.GameState;
+import com.catinthedark.cw_inc.impl.message.BlockCreateReq;
+import com.catinthedark.cw_inc.lib.AbstractSystemDef;
+import com.catinthedark.cw_inc.lib.Nothing;
+import com.catinthedark.cw_inc.lib.Pipe;
+import com.catinthedark.cw_inc.lib.Port;
 
-import java.util.*;
-
-import static com.catinthedark.cw_inc.impl.SysUtils.conditional;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import static com.catinthedark.cw_inc.lib.SysUtils.conditional;
 
 /**
  * Created by over on 15.11.14.
@@ -198,7 +208,7 @@ public class PhysicsSystemDef extends AbstractSystemDef {
             bodyDef.position.set(0, 10);
             playerBody = world.createBody(bodyDef);
             Fixture pFix = playerBody.createFixture(playerShape, 0.1f);
-            pFix.setUserData(new PlayerData());
+            pFix.setUserData(new PlayerUserData());
             cable = new Cable(world, new Vector2(5, 5), 1.0f, Constants.CABLE_SEGS);
 
             RevoluteJointDef jointDef = new RevoluteJointDef();
@@ -290,7 +300,7 @@ public class PhysicsSystemDef extends AbstractSystemDef {
                 default:
             }
 
-            blockFixture.setUserData(new BlockData());
+            blockFixture.setUserData(new BlockUserData());
             blocks.put(req.id, blockBody);
         }
 

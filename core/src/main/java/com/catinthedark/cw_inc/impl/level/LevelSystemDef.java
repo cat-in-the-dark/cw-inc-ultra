@@ -1,9 +1,10 @@
-package com.catinthedark.cw_inc.impl;
+package com.catinthedark.cw_inc.impl.level;
 
 import com.badlogic.gdx.math.Vector2;
-import com.catinthedark.cw_inc.impl.level.BlockType;
-import com.catinthedark.cw_inc.impl.level.LevelMatrix;
-import com.catinthedark.cw_inc.impl.level.Preset;
+import com.catinthedark.cw_inc.impl.common.Constants;
+import com.catinthedark.cw_inc.impl.common.GameShared;
+import com.catinthedark.cw_inc.impl.common.GameState;
+import com.catinthedark.cw_inc.impl.message.BlockCreateReq;
 import com.catinthedark.cw_inc.lib.*;
 
 import java.util.Random;

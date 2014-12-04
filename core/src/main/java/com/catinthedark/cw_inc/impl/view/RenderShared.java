@@ -1,8 +1,9 @@
-package com.catinthedark.cw_inc.impl;
+package com.catinthedark.cw_inc.impl.view;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
+import com.catinthedark.cw_inc.impl.common.GameShared;
 import com.catinthedark.cw_inc.impl.level.LevelMatrix;
 import com.catinthedark.cw_inc.lib.view.Renderable;
 
