@@ -16,7 +16,7 @@ import static com.catinthedark.cw_inc.impl.SysUtils.conditional;
 public class PhysicsSystemDef extends AbstractSystemDef {
     public PhysicsSystemDef(PhysicsShared.Writer shared, SharedMemory<Vector2>.Writer entities) {
         masterDelay = 16;
-        entityCreated = new Pipe<>();
+        botCreated = new Pipe<>();
 
         Sys sys = new Sys(shared, entities);
         updater(conditional(() -> sys.state == GameState.IN_GAME, sys::update));
@@ -25,26 +25,28 @@ public class PhysicsSystemDef extends AbstractSystemDef {
         playerMoveLeft = asyncPort(sys::playerMoveLeft);
         playerJump = asyncPort(sys::playerJump);
         onCreateBlock = asyncPort(sys::createBlock);
+        onCreateBot = asyncPort(sys::createBot);
     }
 
-    public final Pipe<Integer> entityCreated;
+    public final Pipe<Integer> botCreated;
     public final Port<Nothing> onGameStart;
     public final Port<Nothing> playerMoveRight;
     public final Port<Nothing> playerMoveLeft;
     public final Port<Nothing> playerJump;
     public final Port<BlockCreateReq> onCreateBlock;
+    public final Port<Vector2> onCreateBot;
 
     private class Sys {
-        public Sys(PhysicsShared.Writer shared, SharedMemory<Vector2>.Writer entities) {
+        public Sys(PhysicsShared.Writer shared, SharedMemory<Vector2>.Writer botsShared) {
             this.shared = shared;
-            this.entities = entities;
+            this.botsShared = botsShared;
         }
 
         final List<Integer> pointers = new ArrayList<>();
         final Random rand = new Random(System.nanoTime());
         GameState state = GameState.INIT;
         PhysicsShared.Writer shared;
-        final SharedMemory<Vector2>.Writer entities;
+        final SharedMemory<Vector2>.Writer botsShared;
         World world;
 
         float frontEdge = 0;
@@ -54,9 +56,10 @@ public class PhysicsSystemDef extends AbstractSystemDef {
         boolean isPlayerOnFloor = true;
         Cable cable;
         final Map<Long, Body> blocks = new HashMap<>();
+        final Map<Integer, Body> bots = new HashMap<>();
 
         void update(float delay) {
-            world.step(1.0f / 60, 10, 300);
+            world.step(1.0f / 60, 6, 10);
             if(playerBody.getPosition().x > frontEdge) {
                 frontEdge = playerBody.getPosition().x;
                 backEdge = frontEdge - (16+4) < 0 ? 0: frontEdge - (16+4);
@@ -69,7 +72,10 @@ public class PhysicsSystemDef extends AbstractSystemDef {
                 shared.cableDots.update(idx, pos -> pos.set(blockPos));
             }
 
-            pointers.forEach(p -> entities.map(p).set(rand.nextInt(1024), rand.nextInt(640)));
+            bots.entrySet().forEach((kv) ->{
+                int id = kv.getKey();
+                botsShared.map(id).set(kv.getValue().getPosition());
+            });
         }
 
 
@@ -164,9 +170,9 @@ public class PhysicsSystemDef extends AbstractSystemDef {
             _createPlayer();
 
             for (int i = 0; i < 10; i++) {
-                int pointer = entities.alloc(new Vector2(rand.nextInt(1024), rand.nextInt(640)));
+                int pointer = botsShared.alloc(new Vector2(rand.nextInt(1024), rand.nextInt(640)));
                 pointers.add(pointer);
-                entityCreated.write(pointer);
+                botCreated.write(pointer);
             }
 
             state = GameState.IN_GAME;
@@ -235,6 +241,22 @@ public class PhysicsSystemDef extends AbstractSystemDef {
 
             blockFixture.setUserData(new BlockData());
             blocks.put(req.id, blockBody);
+        }
+
+        void createBot(Vector2 deployTo) throws InterruptedException{
+            CircleShape crabShape = new CircleShape();
+            crabShape.setRadius(Constants.CRAB_WIDTH / 2);
+            BodyDef bodyDef = new BodyDef();
+            bodyDef.fixedRotation = true;
+            bodyDef.type = BodyDef.BodyType.DynamicBody;
+            bodyDef.position.set(deployTo);
+            Body body = world.createBody(bodyDef);
+            body.createFixture(crabShape, 1.0f)
+                    .setUserData(new BotUserData());
+
+            int pointer = botsShared.alloc(deployTo.cpy());
+            botCreated.write(pointer);
+            bots.put(pointer, body);
         }
 
     }

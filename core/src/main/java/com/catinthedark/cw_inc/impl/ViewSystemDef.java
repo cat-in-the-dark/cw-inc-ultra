@@ -17,12 +17,12 @@ import com.catinthedark.cw_inc.lib.view.ScreenManager;
  * Created by over on 11.11.14.
  */
 public class ViewSystemDef extends AbstractSystemDef {
-    public ViewSystemDef(PhysicsShared.Reader pShared, SharedMemory<Vector2>.Reader entites, LevelMatrix.View levelView) {
-        Sys sys = new Sys(pShared, entites, levelView);
+    public ViewSystemDef(PhysicsShared.Reader pShared, SharedMemory<Vector2>.Reader bots, LevelMatrix.View levelView) {
+        Sys sys = new Sys(pShared, bots, levelView);
         updater(sys::update);
         onMenuEnter = serialPort(sys::menuEnter);
         onGameStart = serialPort(sys::onGameStart);
-        newEntity = asyncPort(sys::newEntity);
+        newBot = asyncPort(sys::newBot);
         playerDirX = asyncPort(sys::playerDirX);
         playerDirY = asyncPort(sys::playerDirY);
         playerAttack = asyncPort(sys::playerAttack);
@@ -30,18 +30,18 @@ public class ViewSystemDef extends AbstractSystemDef {
 
     public final Port<Nothing> onMenuEnter;
     public final Port<Nothing> onGameStart;
-    public final Port<Integer> newEntity;
+    public final Port<Integer> newBot;
     public final Port<DirectionX> playerDirX;
     public final Port<DirectionY> playerDirY;
     public final Port<Nothing> playerAttack;
 
     private class Sys {
-        public Sys(PhysicsShared.Reader pShared, SharedMemory<Vector2>.Reader entites, LevelMatrix.View levelView) {
+        public Sys(PhysicsShared.Reader pShared, SharedMemory<Vector2>.Reader bots, LevelMatrix.View levelView) {
             shared = new RenderShared();
             shared.camera.update();
-            if (entites == null)
-                throw new RuntimeException("entities is null?? wtf");
-            shared.entities = entites;
+            if (bots == null)
+                throw new RuntimeException("bots is null?? wtf");
+            shared.bots = bots;
             shared.pShared = pShared;
             shared.levelView = levelView;
             manager = new ScreenManager<>(shared, new LogoScreen(), new MenuScreen(), new
@@ -64,9 +64,9 @@ public class ViewSystemDef extends AbstractSystemDef {
             manager.goTo(2);
         }
 
-        void newEntity(int pointer) {
+        void newBot(int pointer) {
             System.out.println("Get entity with id:" + pointer);
-            shared.entityPointers.add(pointer);
+            shared.botsPointers.add(pointer);
         }
 
 

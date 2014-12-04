@@ -2,7 +2,6 @@ package com.catinthedark.cw_inc.impl;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.catinthedark.cw_inc.lib.view.Layer;
@@ -26,11 +25,11 @@ public class MenuScreen extends Screen<RenderShared> {
                 batch.begin();
                 batch.draw(Assets.textures.startGameTex, -512, -320);
 
-                shared.entityPointers.forEach(p -> {
-                    if (shared.entities == null)
+                shared.botsPointers.forEach(p -> {
+                    if (shared.bots == null)
                         throw new RuntimeException("shared is null??");
 
-                    Vector2 pos = shared.entities.map(p);
+                    Vector2 pos = shared.bots.map(p);
                     batch.draw(Assets.textures.heartReg, pos.x, pos.y, 16, 16);
                 });
                 batch.end();

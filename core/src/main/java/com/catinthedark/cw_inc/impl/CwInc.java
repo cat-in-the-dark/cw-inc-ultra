@@ -12,13 +12,13 @@ public class CwInc extends ApplicationAdapter {
     public void create() {
         Assets.init(new Config());
 
-        SharedMemory<Vector2> entitiesShared = new SharedMemory<>(Vector2.class, 100);
+        SharedMemory<Vector2> bots = new SharedMemory<>(Vector2.class, 100);
         PhysicsShared physicsShared = new PhysicsShared();
 
         final LevelSystemDef levelSystem = new LevelSystemDef(physicsShared.reader);
-        final ViewSystemDef viewSystem = new ViewSystemDef(physicsShared.reader, entitiesShared.reader, levelSystem
+        final ViewSystemDef viewSystem = new ViewSystemDef(physicsShared.reader, bots.reader, levelSystem
                 .levelView());
-        final PhysicsSystemDef physicsSystem = new PhysicsSystemDef(physicsShared.writer, entitiesShared.writer);
+        final PhysicsSystemDef physicsSystem = new PhysicsSystemDef(physicsShared.writer, bots.writer);
         final InputSystemDef inputSystem = new InputSystemDef();
 
         final Pipe<Nothing> menuEnter = new Pipe<>();
@@ -26,8 +26,9 @@ public class CwInc extends ApplicationAdapter {
         inputSystem.onGameStart.connect(physicsSystem.onGameStart,
                 levelSystem.onGameStart,
                 viewSystem.onGameStart);
-        physicsSystem.entityCreated.connect(viewSystem.newEntity);
         levelSystem.createBlock.connect(physicsSystem.onCreateBlock);
+        levelSystem.createBot.connect(physicsSystem.onCreateBot);
+        physicsSystem.botCreated.connect(viewSystem.newBot);
 
         inputSystem.onKeyD.connect(physicsSystem.playerMoveRight);
         inputSystem.onKeyA.connect(physicsSystem.playerMoveLeft);
@@ -36,8 +37,7 @@ public class CwInc extends ApplicationAdapter {
         inputSystem.playerDirYSet.connect(viewSystem.playerDirY);
         inputSystem.onPlayerAttack.connect(viewSystem.playerAttack);
 
-        menuEnter.connect(viewSystem.onMenuEnter);
-        menuEnter.connect(inputSystem.menuEnter);
+        menuEnter.connect(viewSystem.onMenuEnter, inputSystem.menuEnter);
 
 
         Launcher.inThread(inputSystem);
@@ -45,6 +45,7 @@ public class CwInc extends ApplicationAdapter {
         runner = Launcher.viaCallback(viewSystem);
         Launcher.inThread(physicsSystem);
 
+        //goto menu after 1000ms
         new Thread(() -> {
             try {
                 Thread.sleep(1000);

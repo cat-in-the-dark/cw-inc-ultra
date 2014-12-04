@@ -23,8 +23,6 @@ public class PlayerRender {
             stateTime += shared.delay;
             //System.out.println("stateTime:" + stateTime);
 
-            batch.setProjectionMatrix(shared.camera.combined);
-            batch.begin();
 
             Vector2 playerPos = shared.playerPos;
             TextureRegion[][] frames;
@@ -105,8 +103,6 @@ public class PlayerRender {
                if(!res)
                    shared.playerAttack = null;
            }
-
-            batch.end();
         }
     }
 

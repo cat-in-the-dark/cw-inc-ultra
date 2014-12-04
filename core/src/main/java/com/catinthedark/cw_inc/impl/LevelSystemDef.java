@@ -20,12 +20,14 @@ public class LevelSystemDef extends AbstractSystemDef {
 
         onGameStart = serialPort(sys::onGameStart);
         createBlock = new Pipe<>();
+        createBot = new Pipe<>();
     }
 
     private final Sys sys;
     public final Port<Nothing> onGameStart;
     private final Random rand = new Random();
     public final Pipe<BlockCreateReq> createBlock;
+    public final Pipe<Vector2> createBot;
 
     public LevelMatrix.View levelView() {
         return sys.matrix.view;
@@ -48,8 +50,10 @@ public class LevelSystemDef extends AbstractSystemDef {
 
         public void addPreset() throws InterruptedException {
             System.out.println("add preset!");
-            for (BlockType[] col : Preset.easyPresets[rand.nextInt(Preset.easyPresets.length)]
-                    .blocks) {
+            int presetEdge = currentX;
+            Preset preset = Preset.easyPresets[rand.nextInt(Preset.easyPresets.length)];
+
+            for (BlockType[] col : preset.blocks) {
                 LevelMatrix.ColMapper mapper = matrix.nextCol();
                 for (int y = 0; y < col.length; y++) {
                     BlockType block = col[y];
@@ -59,6 +63,12 @@ public class LevelSystemDef extends AbstractSystemDef {
                     createBlock.write(new BlockCreateReq(blockIdSeq, block, currentX / 32 * Constants.BLOCK_WIDTH, y * Constants.BLOCK_HEIGHT));
                 }
                 currentX += 32;
+            }
+
+            for(Vector2 botPos : preset.botsPositions){
+                Vector2 deployTo = botPos.cpy();
+                deployTo.x = presetEdge/32 + deployTo.x;
+                createBot.write(deployTo);
             }
         }
 

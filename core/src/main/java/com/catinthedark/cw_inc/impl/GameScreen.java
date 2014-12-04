@@ -80,12 +80,15 @@ public class GameScreen extends Screen<RenderShared> {
 
                   @Override
                   public void render(RenderShared shared) {
-//                      batch.setProjectionMatrix(shared.camera.combined);
-//                      batch.begin();
-////                shared.entityPointers.forEach(p -> {
-////                    Vector2 pos = shared.entities.map(p);
-////                    batch.draw(Assets.textures.heartReg, pos.x - 512, pos.y - 320, 16, 16);
-////                });
+                      batch.setProjectionMatrix(shared.camera.combined);
+                      batch.begin();
+
+                shared.botsPointers.forEach(p -> {
+                    Vector2 pos = shared.bots.map(p);
+                    batch.draw(Assets.textures.mushroomedCrabFramesLeft[0][0],
+                            (pos.x - Constants.CRAB_WIDTH /2) *32,
+                            (pos.y - Constants.CRAB_HEIGHT/2) *32, 64, 64);
+                });
 //                      Vector2 pPos = shared.playerPos;
 //                      TextureRegion pTex;
 //                      if (shared.playerDirX == DirectionX.LEFT)
@@ -96,6 +99,8 @@ public class GameScreen extends Screen<RenderShared> {
 //                      batch.draw(pTex, (pPos.x - Constants.PLAYER_WIDTH / 2) * 32, (pPos.y - Constants.PLAYER_HEIGHT / 2) * 32);
 //                      batch.end();
                       pRender.render(shared,batch);
+
+                      batch.end();
 
                       //draw cable
                       Vector2[] dataset = shared.pShared.cableDots.stream()
