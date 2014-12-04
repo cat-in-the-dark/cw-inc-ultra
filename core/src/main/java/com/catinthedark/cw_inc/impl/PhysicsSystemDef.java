@@ -14,7 +14,7 @@ import static com.catinthedark.cw_inc.impl.SysUtils.conditional;
  * Created by over on 15.11.14.
  */
 public class PhysicsSystemDef extends AbstractSystemDef {
-    public PhysicsSystemDef(PhysicsShared.Writer shared) {
+    public PhysicsSystemDef(GameShared shared) {
         masterDelay = 16;
         botCreated = new Pipe<>();
 
@@ -26,6 +26,7 @@ public class PhysicsSystemDef extends AbstractSystemDef {
         playerJump = asyncPort(sys::playerJump);
         onCreateBlock = asyncPort(sys::createBlock);
         onCreateBot = asyncPort(sys::createBot);
+        //playerAttack = asyncPort(sys::playerAttack);
     }
 
     public final Pipe<Integer> botCreated;
@@ -35,16 +36,17 @@ public class PhysicsSystemDef extends AbstractSystemDef {
     public final Port<Nothing> playerJump;
     public final Port<BlockCreateReq> onCreateBlock;
     public final Port<Vector2> onCreateBot;
+    //public final Port<Nothing> playerAttack;
 
     private class Sys {
-        public Sys(PhysicsShared.Writer shared) {
+        public Sys(GameShared shared) {
             this.shared = shared;
         }
 
         final List<Integer> pointers = new ArrayList<>();
         final Random rand = new Random(System.nanoTime());
         GameState state = GameState.INIT;
-        PhysicsShared.Writer shared;
+        GameShared shared;
         World world;
 
         float frontEdge = 0;

@@ -2,7 +2,6 @@ package com.catinthedark.cw_inc.impl;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 import com.catinthedark.cw_inc.lib.*;
 
 public class CwInc extends ApplicationAdapter {
@@ -12,12 +11,12 @@ public class CwInc extends ApplicationAdapter {
     public void create() {
         Assets.init(new Config());
 
-        PhysicsShared physicsShared = new PhysicsShared();
+        GameShared physicsShared = new GameShared();
 
-        final LevelSystemDef levelSystem = new LevelSystemDef(physicsShared.reader);
-        final ViewSystemDef viewSystem = new ViewSystemDef(physicsShared.reader, levelSystem
+        final LevelSystemDef levelSystem = new LevelSystemDef(physicsShared);
+        final ViewSystemDef viewSystem = new ViewSystemDef(physicsShared, levelSystem
                 .levelView());
-        final PhysicsSystemDef physicsSystem = new PhysicsSystemDef(physicsShared.writer);
+        final PhysicsSystemDef physicsSystem = new PhysicsSystemDef(physicsShared);
         final InputSystemDef inputSystem = new InputSystemDef();
 
         final Pipe<Nothing> menuEnter = new Pipe<>();

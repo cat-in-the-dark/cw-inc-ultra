@@ -25,11 +25,4 @@ public class SharedVal<T> {
     public void update(Consumer<T> updater){
         updater.accept(val);
     }
-
-    public interface Reader<T> {
-        T get();
-    }
-    public interface Writer<T> {
-        void update(Consumer<T> updater);
-    }
 }

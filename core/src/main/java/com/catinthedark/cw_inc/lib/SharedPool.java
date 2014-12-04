@@ -14,9 +14,6 @@ public class SharedPool<T> {
     private final T[] memory;
     Queue<Integer> pointerPool;
 
-    public final Reader reader = new Reader();
-    public final Writer writer = new Writer();
-
     public SharedPool(Class<? extends T> clazz, int size) {
         memory = (T[]) Array.newInstance(clazz, size);
         pointerPool = IntStream.rangeClosed(1, size)
@@ -24,31 +21,24 @@ public class SharedPool<T> {
                 .collect(Collectors.toCollection(() -> new LinkedList<>()));
     }
 
-    public class Reader {
-        public T map(int pointer) {
-            return memory[pointer];
-        }
+    public T map(int pointer) {
+        return memory[pointer];
     }
 
-    public class Writer {
-        public int alloc(T data) {
-            System.out.println("alloc:poll");
-            int pointer = pointerPool.poll();
-            System.out.println("after alloc:poll");
-            memory[pointer] = data;
-            return pointer;
-        }
+    public int alloc(T data) {
+        System.out.println("alloc:poll");
+        int pointer = pointerPool.poll();
+        System.out.println("after alloc:poll");
+        memory[pointer] = data;
+        return pointer;
+    }
 
-        public T map(int pointer) {
-            return memory[pointer];
-        }
 
-        public void update(int pointer, Consumer<T> update) {
-            update.accept(memory[pointer]);
-        }
+    public void update(int pointer, Consumer<T> update) {
+        update.accept(memory[pointer]);
+    }
 
-        public void free(int pointer) {
-            pointerPool.add(pointer);
-        }
+    public void free(int pointer) {
+        pointerPool.add(pointer);
     }
 }

@@ -7,13 +7,12 @@ import com.catinthedark.cw_inc.impl.level.Preset;
 import com.catinthedark.cw_inc.lib.*;
 
 import java.util.Random;
-import java.util.stream.IntStream;
 
 /**
  * Created by over on 18.11.14.
  */
 public class LevelSystemDef extends AbstractSystemDef {
-    public LevelSystemDef(PhysicsShared.Reader pShared) {
+    public LevelSystemDef(GameShared pShared) {
         this.sys = new Sys(pShared);
         updater(sys::createLevel);
         masterDelay = 100;
@@ -35,12 +34,12 @@ public class LevelSystemDef extends AbstractSystemDef {
 
     private class Sys {
         final LevelMatrix matrix;
-        final PhysicsShared.Reader pShared;
+        final GameShared pShared;
         int currentX = 0;
         GameState state = GameState.INIT;
         long blockIdSeq = 0;
 
-        Sys(PhysicsShared.Reader pShared) {
+        Sys(GameShared pShared) {
             this.pShared = pShared;
 
             matrix = new LevelMatrix(10, 70, block -> {

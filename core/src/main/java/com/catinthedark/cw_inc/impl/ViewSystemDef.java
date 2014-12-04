@@ -9,7 +9,6 @@ import com.catinthedark.cw_inc.impl.level.LevelMatrix;
 import com.catinthedark.cw_inc.lib.AbstractSystemDef;
 import com.catinthedark.cw_inc.lib.Nothing;
 import com.catinthedark.cw_inc.lib.Port;
-import com.catinthedark.cw_inc.lib.SharedPool;
 import com.catinthedark.cw_inc.lib.view.Renderable;
 import com.catinthedark.cw_inc.lib.view.ScreenManager;
 
@@ -17,7 +16,7 @@ import com.catinthedark.cw_inc.lib.view.ScreenManager;
  * Created by over on 11.11.14.
  */
 public class ViewSystemDef extends AbstractSystemDef {
-    public ViewSystemDef(PhysicsShared.Reader pShared, LevelMatrix.View levelView) {
+    public ViewSystemDef(GameShared pShared, LevelMatrix.View levelView) {
         Sys sys = new Sys(pShared, levelView);
         updater(sys::update);
         onMenuEnter = serialPort(sys::menuEnter);
@@ -36,7 +35,7 @@ public class ViewSystemDef extends AbstractSystemDef {
     public final Port<Nothing> playerAttack;
 
     private class Sys {
-        public Sys(PhysicsShared.Reader pShared, LevelMatrix.View levelView) {
+        public Sys(GameShared pShared, LevelMatrix.View levelView) {
             shared = new RenderShared();
             shared.camera.update();
             shared.pShared = pShared;
