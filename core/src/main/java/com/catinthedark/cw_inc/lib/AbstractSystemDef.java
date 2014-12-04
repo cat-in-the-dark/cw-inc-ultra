@@ -55,9 +55,9 @@ public abstract class AbstractSystemDef {
     }
 
 
-    void update() throws InterruptedException {
+    void update(float delay) throws InterruptedException {
         for (Updater updater : updaters)
-            updater.fn.doLogic(0);
+            updater.fn.doLogic(delay);
 
         NoArgFunction<RunnableEx> queueOp;
         if (isQueueBlocking)

@@ -20,8 +20,8 @@ public enum BlockType {
         this.collidable = collidable;
     }
 
-    public LevelBlock at(int x, int y) {
-        return new LevelBlock(this, x, y);
+    public LevelBlock at(long id, int x, int y) {
+        return new LevelBlock(id, this, x, y);
     }
 
     public static BlockType byId(int id) {

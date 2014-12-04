@@ -53,7 +53,7 @@ public class Launcher {
                     try {
                         for (SystemTask task : tasks) {
                             Thread.sleep(task.delay);
-                            task.system.update();
+                            task.system.update(0);
                         }
                     } catch (InterruptedException ex) {
                         running = false;
@@ -69,10 +69,10 @@ public class Launcher {
         final List<SystemTask> tasks = prepare(systems);
         tasks.forEach(t -> t.system.start());
 
-        return (CallbackRunner) () -> {
+        return (CallbackRunner) (delay) -> {
             for (SystemTask task : tasks) {
                 Thread.sleep(task.delay);
-                task.system.update();
+                task.system.update(delay);
             }
         };
 

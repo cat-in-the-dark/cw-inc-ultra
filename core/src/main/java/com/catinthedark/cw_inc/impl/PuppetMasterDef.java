@@ -16,7 +16,7 @@ public class PuppetMasterDef extends AbstractSystemDef {
     final Sys sys = new Sys();
     public final Pipe<Nothing> onMenuEnter = new Pipe<>();
     public final Pipe<Nothing> onGameStart = new Pipe<>();
-    public final Port<Nothing> onKeyEnter = asyncPort(sys::onKeyEnter);
+    public final Port<Nothing> gameStart = asyncPort(sys::onGameStart);
 
     {
         isQueueBlocking = true;
@@ -36,7 +36,7 @@ public class PuppetMasterDef extends AbstractSystemDef {
     private class Sys {
         GameState state = GameState.INIT;
 
-        void onKeyEnter(Nothing ignored) throws InterruptedException {
+        void onGameStart(Nothing ignored) throws InterruptedException {
             if (state == GameState.MENU) {
                 System.out.println("puppet:broadcast GAME_START");
                 onGameStart.write(Nothing.NONE);

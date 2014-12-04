@@ -2,14 +2,17 @@ package com.catinthedark.cw_inc.impl;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.Vector2;
 import com.catinthedark.cw_inc.impl.level.LevelBlock;
 import com.catinthedark.cw_inc.lib.view.Layer;
 import com.catinthedark.cw_inc.lib.view.Screen;
+
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Created by over on 15.11.14.
@@ -57,9 +60,10 @@ public class GameScreen extends Screen<RenderShared> {
                                           tex = Assets.textures.grass_slope_right_shadow;
                                           break;
                                       case EMPTY:
+                                          //must be filtered in LevelSystem
                                           break;
                                   }
-                                  batch.draw(tex, block.x, block.y);
+                                  batch.draw(tex, block.x - Constants.BLOCK_WIDTH * 32 / 2, block.y - Constants.BLOCK_HEIGHT * 32 / 2);
                               }
                           }
                       });
@@ -67,20 +71,56 @@ public class GameScreen extends Screen<RenderShared> {
                   }
               }, new Layer<RenderShared>() {
                   final SpriteBatch batch = new SpriteBatch();
+                  final ShapeRenderer shapeRenderer = new ShapeRenderer();
+                  final PlayerRender pRender = new PlayerRender();
+
+                  {
+                      shapeRenderer.setColor(0.9f, 0.65f, 0.18f, 1.0f);
+                  }
 
                   @Override
                   public void render(RenderShared shared) {
-                      batch.setProjectionMatrix(shared.camera.combined);
-                      batch.begin();
-//                shared.entityPointers.forEach(p -> {
-//                    Vector2 pos = shared.entities.map(p);
-//                    batch.draw(Assets.textures.heartReg, pos.x - 512, pos.y - 320, 16, 16);
-//                });
-                      if (shared.playerPos != null) {
-                          Vector2 pPos = shared.playerPos;
-                          batch.draw(Assets.textures.playerFrames[0][0], pPos.x, pPos.y);
-                      }
-                      batch.end();
+//                      batch.setProjectionMatrix(shared.camera.combined);
+//                      batch.begin();
+////                shared.entityPointers.forEach(p -> {
+////                    Vector2 pos = shared.entities.map(p);
+////                    batch.draw(Assets.textures.heartReg, pos.x - 512, pos.y - 320, 16, 16);
+////                });
+//                      Vector2 pPos = shared.playerPos;
+//                      TextureRegion pTex;
+//                      if (shared.playerDirX == DirectionX.LEFT)
+//                          pTex = Assets.textures.playerFramesBack[0][0];
+//                      else
+//                          pTex = Assets.textures.playerFrames[0][0];
+//
+//                      batch.draw(pTex, (pPos.x - Constants.PLAYER_WIDTH / 2) * 32, (pPos.y - Constants.PLAYER_HEIGHT / 2) * 32);
+//                      batch.end();
+                      pRender.render(shared,batch);
+
+                      //draw cable
+                      Vector2[] dataset = shared.pShared.cableDots.stream()
+                              .map(vec -> vec.cpy().scl(32))
+                              .toArray(Vector2[]::new);
+
+                      CatmullRomSpline<Vector2> romSpline = new CatmullRomSpline<Vector2>(dataset, false);
+
+                      Vector2[] dots = IntStream.rangeClosed(0, Constants.CABLE_STEPS - 1)
+                              .boxed()
+                              .map(i -> {
+                                  Vector2 vec = new Vector2();
+                                  romSpline.valueAt(vec, ((float) i) / ((float) Constants.CABLE_STEPS - 1));
+                                  return vec;
+                              })
+                              .toArray(Vector2[]::new);
+
+                      Gdx.gl20.glLineWidth(Constants.CABLE_THICK);
+                      shapeRenderer.setProjectionMatrix(shared.camera.combined);
+                      shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                      for (int i = 0; i < Constants.CABLE_STEPS - 1; ++i)
+                          shapeRenderer.line(dots[i], dots[i + 1]);
+                      shapeRenderer.end();
+
+
                   }
               }
 
