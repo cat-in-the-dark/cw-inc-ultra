@@ -9,10 +9,6 @@ import com.badlogic.gdx.math.Vector2;
  * Created by over on 04.12.14.
  */
 public class PlayerRender {
-
-
-
-
         private boolean blink = false;
         private int blinkCount = 0;
         private int wifiRayOffset = 0;
@@ -29,7 +25,7 @@ public class PlayerRender {
             Animation jumpAnimation;
             Animation goAnimation;
 
-            if (shared.playerDirX == DirectionX.RIGHT) {
+            if (shared.gShared.pDirection.get().dirX == DirectionX.RIGHT) {
                 frames = Assets.textures.playerFrames;
                 jumpAnimation = Assets.animations.playerJump;
                 goAnimation = Assets.animations.playerGo;
@@ -55,7 +51,7 @@ public class PlayerRender {
 
                         TextureRegion frame = null;
                         // если стоит
-                        switch (shared.playerDirY) {
+                        switch (shared.gShared.pDirection.get().dirY) {
                             case UP:
                                 frame = frames[0][13];
                                 break;

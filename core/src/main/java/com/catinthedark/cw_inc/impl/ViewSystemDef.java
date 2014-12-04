@@ -22,23 +22,19 @@ public class ViewSystemDef extends AbstractSystemDef {
         onMenuEnter = serialPort(sys::menuEnter);
         onGameStart = serialPort(sys::onGameStart);
         newBot = asyncPort(sys::newBot);
-        playerDirX = asyncPort(sys::playerDirX);
-        playerDirY = asyncPort(sys::playerDirY);
         playerAttack = asyncPort(sys::playerAttack);
     }
 
     public final Port<Nothing> onMenuEnter;
     public final Port<Nothing> onGameStart;
     public final Port<Integer> newBot;
-    public final Port<DirectionX> playerDirX;
-    public final Port<DirectionY> playerDirY;
     public final Port<Nothing> playerAttack;
 
     private class Sys {
         public Sys(GameShared pShared, LevelMatrix.View levelView) {
             shared = new RenderShared();
             shared.camera.update();
-            shared.pShared = pShared;
+            shared.gShared = pShared;
             shared.levelView = levelView;
             manager = new ScreenManager<>(shared, new LogoScreen(), new MenuScreen(), new
                     GameScreen());
@@ -96,19 +92,13 @@ public class ViewSystemDef extends AbstractSystemDef {
         }
 
         void update(float delay) {
-            shared.playerPos = shared.pShared.pPos.get().cpy();
+            shared.playerPos = shared.gShared.pPos.get().cpy();
             shared.delay = delay;
             _pollPlayerAnimation();
             _render();
             _cameraMove();
         }
 
-        void playerDirX(DirectionX dirX) {
-            shared.playerDirX = dirX;
-        }
-        void playerDirY(DirectionY dirY) {
-            shared.playerDirY = dirY;
-        }
         void playerAttack(Nothing ignored){
             shared.playerAttack = new Renderable<RenderShared>() {
                 int wifiRayOffset;
@@ -124,8 +114,8 @@ public class ViewSystemDef extends AbstractSystemDef {
 
                     Vector2 playerPos = shared.playerPos;
 
-                    if (shared.playerDirX == DirectionX.RIGHT) {
-                        switch (shared.playerDirY) {
+                    if (shared.gShared.pDirection.get().dirX == DirectionX.RIGHT) {
+                        switch (shared.gShared.pDirection.get().dirY) {
                             case UP:
                                 batch.draw(Assets.textures.shot,
                                         (playerPos.x + Constants.PLAYER_HEIGHT / 2)
@@ -159,7 +149,7 @@ public class ViewSystemDef extends AbstractSystemDef {
                                 break;
                         }
                     } else {
-                        switch (shared.playerDirY) {
+                        switch (shared.gShared.pDirection.get().dirY) {
                             case UP:
                                 batch.draw(Assets.textures.shot,
                                         (playerPos.x - Constants.PLAYER_HEIGHT / 2)

@@ -11,13 +11,13 @@ public class CwInc extends ApplicationAdapter {
     public void create() {
         Assets.init(new Config());
 
-        GameShared physicsShared = new GameShared();
+        GameShared gameShared = new GameShared();
 
-        final LevelSystemDef levelSystem = new LevelSystemDef(physicsShared);
-        final ViewSystemDef viewSystem = new ViewSystemDef(physicsShared, levelSystem
+        final LevelSystemDef levelSystem = new LevelSystemDef(gameShared);
+        final ViewSystemDef viewSystem = new ViewSystemDef(gameShared, levelSystem
                 .levelView());
-        final PhysicsSystemDef physicsSystem = new PhysicsSystemDef(physicsShared);
-        final InputSystemDef inputSystem = new InputSystemDef();
+        final PhysicsSystemDef physicsSystem = new PhysicsSystemDef(gameShared);
+        final InputSystemDef inputSystem = new InputSystemDef(gameShared);
 
         final Pipe<Nothing> menuEnter = new Pipe<>();
 
@@ -31,8 +31,6 @@ public class CwInc extends ApplicationAdapter {
         inputSystem.onKeyD.connect(physicsSystem.playerMoveRight);
         inputSystem.onKeyA.connect(physicsSystem.playerMoveLeft);
         inputSystem.onKeySpace.connect(physicsSystem.playerJump);
-        inputSystem.playerDirXSet.connect(viewSystem.playerDirX);
-        inputSystem.playerDirYSet.connect(viewSystem.playerDirY);
         inputSystem.onPlayerAttack.connect(viewSystem.playerAttack);
 
         menuEnter.connect(viewSystem.onMenuEnter, inputSystem.menuEnter);

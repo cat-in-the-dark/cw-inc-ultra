@@ -11,7 +11,6 @@ import com.catinthedark.cw_inc.impl.level.LevelBlock;
 import com.catinthedark.cw_inc.lib.view.Layer;
 import com.catinthedark.cw_inc.lib.view.Screen;
 
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -84,7 +83,7 @@ public class GameScreen extends Screen<RenderShared> {
                       batch.begin();
 
                       shared.botsPointers.forEach(p -> {
-                          BotPhysicsData data = shared.pShared.bots.map(p);
+                          BotPhysicsData data = shared.gShared.bots.map(p);
                           Vector2 pos = data.pos;
                           TextureRegion botTex;
                           //System.out.print(data.velocity.x);
@@ -111,7 +110,7 @@ public class GameScreen extends Screen<RenderShared> {
                       batch.end();
 
                       //draw cable
-                      Vector2[] dataset = shared.pShared.cableDots.stream()
+                      Vector2[] dataset = shared.gShared.cableDots.stream()
                               .map(vec -> vec.cpy().scl(32))
                               .toArray(Vector2[]::new);
 

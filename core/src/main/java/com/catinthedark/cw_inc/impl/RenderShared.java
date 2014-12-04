@@ -15,11 +15,9 @@ import java.util.List;
 public class RenderShared {
     public final Camera camera = new OrthographicCamera(1024, 640);
     public final OrthographicCamera backgroundCamera = new OrthographicCamera(32, 20);
-    public GameShared pShared;
+    public GameShared gShared;
     public final List<Integer> botsPointers = new ArrayList<>();
     public Vector2 playerPos = null;
-    public DirectionX playerDirX = DirectionX.LEFT;
-    public DirectionY playerDirY = DirectionY.MIDDLE;
     public boolean animatePlayerMove = false;
     public Renderable<RenderShared> playerAttack;
     public LevelMatrix.View levelView = null;

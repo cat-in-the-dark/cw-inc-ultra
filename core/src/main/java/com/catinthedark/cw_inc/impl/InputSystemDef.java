@@ -9,19 +9,19 @@ import com.catinthedark.cw_inc.lib.*;
  * Created by over on 11.11.14.
  */
 public class InputSystemDef extends AbstractSystemDef {
-    private final Sys sys = new Sys();
-    public final Port<Nothing> menuEnter = serialPort(sys::menuEnter);
+    private Sys sys;
+    public final Port<Nothing> menuEnter;
     public final Pipe<Nothing> onGameStart = new Pipe<>();
     public final Pipe<Nothing> onKeyD = new Pipe<>();
     public final Pipe<Nothing> onKeyA = new Pipe<>();
     public final Pipe<Nothing> onKeySpace = new Pipe<>();
     public final Pipe<Nothing> onPlayerAttack = new Pipe<>();
-    public final Pipe<DirectionX> playerDirXSet = new Pipe<>();
-    public final Pipe<DirectionY> playerDirYSet = new Pipe<>();
 
-    {
+    public InputSystemDef(GameShared gameShared){
+        sys = new Sys(gameShared);
         updater(sys.ifInState(GameState.IN_GAME, sys::moveKeysPoll));
         updater(sys.ifInState(GameState.IN_GAME, sys::spaceKeyPoll));
+        menuEnter = serialPort(sys::menuEnter);
         masterDelay = 20;
     }
 
@@ -34,8 +34,10 @@ public class InputSystemDef extends AbstractSystemDef {
         }
 
         boolean canAttack = true;
+        final GameShared gameShared;
 
-        Sys(){
+        Sys(GameShared gameShared){
+            this.gameShared = gameShared;
             Gdx.input.setInputProcessor(new InputAdapter() {
                 boolean handleKeyDown(int keycode){
                     try {
@@ -47,11 +49,11 @@ public class InputSystemDef extends AbstractSystemDef {
                             return true;
                         }
                         if(keycode == Input.Keys.W){
-                            playerDirYSet.write(DirectionY.UP);
+                            gameShared.pDirection.update((d) -> d.dirY = DirectionY.UP);
                             return true;
                         }
                         if(keycode == Input.Keys.S){
-                            playerDirYSet.write(DirectionY.DOWN);
+                            gameShared.pDirection.update((d) -> d.dirY = DirectionY.DOWN);
                             return true;
                         }
                     }catch (InterruptedException ex){
@@ -61,14 +63,10 @@ public class InputSystemDef extends AbstractSystemDef {
                     return false;
                 }
                 boolean handleKeyUp(int keycode){
-                    try {
                         if(keycode == Input.Keys.W || keycode == Input.Keys.S){
-                            playerDirYSet.write(DirectionY.MIDDLE);
+                            gameShared.pDirection.update((d) -> d.dirY = DirectionY.MIDDLE);
                             return true;
                         }
-                    }catch (InterruptedException ex){
-                        ex.printStackTrace();
-                    }
 
                     return false;
                 }
@@ -86,11 +84,10 @@ public class InputSystemDef extends AbstractSystemDef {
         }
 
         GameState state;
-        DirectionX playerDirX;
 
         void _startGame() throws InterruptedException{
             state = GameState.IN_GAME;
-            playerDirX = DirectionX.LEFT;
+            gameShared.pDirection.update((d) -> d.dirX = DirectionX.RIGHT);
             onGameStart.write(Nothing.NONE);
         }
 
@@ -106,17 +103,11 @@ public class InputSystemDef extends AbstractSystemDef {
         void moveKeysPoll(float delay) throws InterruptedException {
             if (Gdx.input.isKeyPressed(Input.Keys.D)) {
                 onKeyD.write(Nothing.NONE);
-                if(playerDirX != DirectionX.RIGHT){
-                    playerDirX = DirectionX.RIGHT;
-                    playerDirXSet.write(DirectionX.RIGHT);
-                }
+                gameShared.pDirection.update((d) -> d.dirX = DirectionX.RIGHT);
             }
             if (Gdx.input.isKeyPressed(Input.Keys.A)){
                 onKeyA.write(Nothing.NONE);
-                if(playerDirX != DirectionX.LEFT){
-                    playerDirX = DirectionX.LEFT;
-                    playerDirXSet.write(DirectionX.LEFT);
-                }
+                gameShared.pDirection.update((d) -> d.dirX = DirectionX.LEFT);
             }
         }
 

@@ -5,5 +5,10 @@ package com.catinthedark.cw_inc.impl;
  */
 public class Direction {
     public DirectionX dirX;
-    public Direction dirY;
+    public DirectionY dirY;
+
+    public Direction(DirectionX dirX, DirectionY dirY){
+        this.dirX = dirX;
+        this.dirY = dirY;
+    }
 }
