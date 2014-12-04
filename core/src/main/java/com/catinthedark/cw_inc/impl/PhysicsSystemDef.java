@@ -14,11 +14,11 @@ import static com.catinthedark.cw_inc.impl.SysUtils.conditional;
  * Created by over on 15.11.14.
  */
 public class PhysicsSystemDef extends AbstractSystemDef {
-    public PhysicsSystemDef(PhysicsShared.Writer shared, SharedMemory<Vector2>.Writer entities) {
+    public PhysicsSystemDef(PhysicsShared.Writer shared) {
         masterDelay = 16;
         botCreated = new Pipe<>();
 
-        Sys sys = new Sys(shared, entities);
+        Sys sys = new Sys(shared);
         updater(conditional(() -> sys.state == GameState.IN_GAME, sys::update));
         onGameStart = serialPort(sys::onGameStart);
         playerMoveRight = asyncPort(sys::playerMoveRight);
@@ -37,16 +37,14 @@ public class PhysicsSystemDef extends AbstractSystemDef {
     public final Port<Vector2> onCreateBot;
 
     private class Sys {
-        public Sys(PhysicsShared.Writer shared, SharedMemory<Vector2>.Writer botsShared) {
+        public Sys(PhysicsShared.Writer shared) {
             this.shared = shared;
-            this.botsShared = botsShared;
         }
 
         final List<Integer> pointers = new ArrayList<>();
         final Random rand = new Random(System.nanoTime());
         GameState state = GameState.INIT;
         PhysicsShared.Writer shared;
-        final SharedMemory<Vector2>.Writer botsShared;
         World world;
 
         float frontEdge = 0;
@@ -72,9 +70,9 @@ public class PhysicsSystemDef extends AbstractSystemDef {
                 shared.cableDots.update(idx, pos -> pos.set(blockPos));
             }
 
-            bots.entrySet().forEach((kv) ->{
+            bots.entrySet().forEach((kv) -> {
                 int id = kv.getKey();
-                botsShared.map(id).set(kv.getValue().getPosition());
+                shared.bots.update(id, data -> data.pos.set(kv.getValue().getPosition()));
             });
         }
 
@@ -169,12 +167,6 @@ public class PhysicsSystemDef extends AbstractSystemDef {
 
             _createPlayer();
 
-            for (int i = 0; i < 10; i++) {
-                int pointer = botsShared.alloc(new Vector2(rand.nextInt(1024), rand.nextInt(640)));
-                pointers.add(pointer);
-                botCreated.write(pointer);
-            }
-
             state = GameState.IN_GAME;
         }
 
@@ -254,7 +246,7 @@ public class PhysicsSystemDef extends AbstractSystemDef {
             body.createFixture(crabShape, 1.0f)
                     .setUserData(new BotUserData());
 
-            int pointer = botsShared.alloc(deployTo.cpy());
+            int pointer = shared.bots.alloc(new BotPhysicsData(deployTo.cpy(), new Vector2()));
             botCreated.write(pointer);
             bots.put(pointer, body);
         }

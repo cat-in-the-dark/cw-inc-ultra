@@ -3,20 +3,21 @@ package com.catinthedark.cw_inc.lib;
 import java.lang.reflect.Array;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
  * Created by over on 15.11.14.
  */
-public class SharedMemory<T> {
+public class SharedPool<T> {
     private final T[] memory;
     Queue<Integer> pointerPool;
 
     public final Reader reader = new Reader();
     public final Writer writer = new Writer();
 
-    public SharedMemory(Class<? extends T> clazz, int size) {
+    public SharedPool(Class<? extends T> clazz, int size) {
         memory = (T[]) Array.newInstance(clazz, size);
         pointerPool = IntStream.rangeClosed(1, size)
                 .boxed()
@@ -40,6 +41,10 @@ public class SharedMemory<T> {
 
         public T map(int pointer) {
             return memory[pointer];
+        }
+
+        public void update(int pointer, Consumer<T> update) {
+            update.accept(memory[pointer]);
         }
 
         public void free(int pointer) {

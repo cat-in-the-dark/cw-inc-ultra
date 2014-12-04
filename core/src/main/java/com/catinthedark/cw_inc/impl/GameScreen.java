@@ -83,12 +83,20 @@ public class GameScreen extends Screen<RenderShared> {
                       batch.setProjectionMatrix(shared.camera.combined);
                       batch.begin();
 
-                shared.botsPointers.forEach(p -> {
-                    Vector2 pos = shared.bots.map(p);
-                    batch.draw(Assets.textures.mushroomedCrabFramesLeft[0][0],
-                            (pos.x - Constants.CRAB_WIDTH /2) *32,
-                            (pos.y - Constants.CRAB_HEIGHT/2) *32, 64, 64);
-                });
+                      shared.botsPointers.forEach(p -> {
+                          BotPhysicsData data = shared.pShared.bots.map(p);
+                          Vector2 pos = data.pos;
+                          TextureRegion botTex;
+                          //System.out.print(data.velocity.x);
+                          if(data.velocity.x >= 0)
+                              botTex = Assets.textures.mushroomedCrabFramesLeft[0][0];
+                          else
+                              botTex = Assets.textures.mushroomedCrabFramesRight[0][0];
+
+                          batch.draw(botTex,
+                                  (pos.x - Constants.CRAB_WIDTH / 2) * 32,
+                                  (pos.y - Constants.CRAB_HEIGHT / 2) * 32, 64, 64);
+                      });
 //                      Vector2 pPos = shared.playerPos;
 //                      TextureRegion pTex;
 //                      if (shared.playerDirX == DirectionX.LEFT)
@@ -98,7 +106,7 @@ public class GameScreen extends Screen<RenderShared> {
 //
 //                      batch.draw(pTex, (pPos.x - Constants.PLAYER_WIDTH / 2) * 32, (pPos.y - Constants.PLAYER_HEIGHT / 2) * 32);
 //                      batch.end();
-                      pRender.render(shared,batch);
+                      pRender.render(shared, batch);
 
                       batch.end();
 
@@ -107,7 +115,7 @@ public class GameScreen extends Screen<RenderShared> {
                               .map(vec -> vec.cpy().scl(32))
                               .toArray(Vector2[]::new);
 
-                      CatmullRomSpline<Vector2> romSpline = new CatmullRomSpline<Vector2>(dataset, false);
+                      CatmullRomSpline<Vector2> romSpline = new CatmullRomSpline<>(dataset, false);
 
                       Vector2[] dots = IntStream.rangeClosed(0, Constants.CABLE_STEPS - 1)
                               .boxed()

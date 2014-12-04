@@ -12,13 +12,12 @@ public class CwInc extends ApplicationAdapter {
     public void create() {
         Assets.init(new Config());
 
-        SharedMemory<Vector2> bots = new SharedMemory<>(Vector2.class, 100);
         PhysicsShared physicsShared = new PhysicsShared();
 
         final LevelSystemDef levelSystem = new LevelSystemDef(physicsShared.reader);
-        final ViewSystemDef viewSystem = new ViewSystemDef(physicsShared.reader, bots.reader, levelSystem
+        final ViewSystemDef viewSystem = new ViewSystemDef(physicsShared.reader, levelSystem
                 .levelView());
-        final PhysicsSystemDef physicsSystem = new PhysicsSystemDef(physicsShared.writer, bots.writer);
+        final PhysicsSystemDef physicsSystem = new PhysicsSystemDef(physicsShared.writer);
         final InputSystemDef inputSystem = new InputSystemDef();
 
         final Pipe<Nothing> menuEnter = new Pipe<>();

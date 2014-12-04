@@ -24,17 +24,8 @@ public class MenuScreen extends Screen<RenderShared> {
                 batch.setProjectionMatrix(shared.camera.combined);
                 batch.begin();
                 batch.draw(Assets.textures.startGameTex, -512, -320);
-
-                shared.botsPointers.forEach(p -> {
-                    if (shared.bots == null)
-                        throw new RuntimeException("shared is null??");
-
-                    Vector2 pos = shared.bots.map(p);
-                    batch.draw(Assets.textures.heartReg, pos.x, pos.y, 16, 16);
-                });
                 batch.end();
             }
-
         });
     }
 }
