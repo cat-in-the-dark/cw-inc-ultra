@@ -1,11 +1,11 @@
-package com.catinthedark.cw_inc.lib;
+package com.catinthedark.cw_inc.lib.common;
 
 /**
  * Created by over on 08.11.14.
  */
 public class Updater {
-    final LogicalFunction fn;
-    final int period;
+    public final LogicalFunction fn;
+    public final int period;
 
     public Updater(LogicalFunction fn, int period) {
         this.fn = fn;

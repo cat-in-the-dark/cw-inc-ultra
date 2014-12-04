@@ -1,5 +1,8 @@
 package com.catinthedark.cw_inc.lib;
 
+import com.catinthedark.cw_inc.lib.common.*;
+import com.catinthedark.cw_inc.lib.io.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -12,7 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public abstract class AbstractSystemDef {
     protected List<Updater> updaters = new ArrayList<>();
     protected boolean isQueueBlocking = false;
-    protected int masterDelay = 0;
+    public int masterDelay = 0;
 
     public int getMasterDelay() {
         return masterDelay;
@@ -50,12 +53,8 @@ public abstract class AbstractSystemDef {
         return updater;
     }
 
-    private interface NoArgFunction<T> {
-        T call() throws InterruptedException;
-    }
 
-
-    void update(float delay) throws InterruptedException {
+    public void update(float delay) throws InterruptedException {
         for (Updater updater : updaters)
             updater.fn.doLogic(delay);
 

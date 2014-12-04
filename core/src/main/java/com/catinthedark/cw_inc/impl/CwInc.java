@@ -8,10 +8,10 @@ import com.catinthedark.cw_inc.impl.input.InputSystemDef;
 import com.catinthedark.cw_inc.impl.level.LevelSystemDef;
 import com.catinthedark.cw_inc.impl.physics.PhysicsSystemDef;
 import com.catinthedark.cw_inc.impl.view.ViewSystemDef;
-import com.catinthedark.cw_inc.lib.CallbackRunner;
-import com.catinthedark.cw_inc.lib.Launcher;
-import com.catinthedark.cw_inc.lib.Nothing;
-import com.catinthedark.cw_inc.lib.Pipe;
+import com.catinthedark.cw_inc.lib.run.CallbackRunner;
+import com.catinthedark.cw_inc.lib.run.Launcher;
+import com.catinthedark.cw_inc.lib.common.Nothing;
+import com.catinthedark.cw_inc.lib.io.Pipe;
 
 public class CwInc extends ApplicationAdapter {
     private CallbackRunner runner;

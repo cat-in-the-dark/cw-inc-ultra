@@ -1,8 +1,11 @@
-package com.catinthedark.cw_inc.lib;
+package com.catinthedark.cw_inc.lib.io;
 
 /**
  * Created by over on 14.11.14.
  */
+
+import com.catinthedark.cw_inc.lib.common.DispatchableLogicFunction;
+import com.catinthedark.cw_inc.lib.common.RunnableEx;
 
 import java.util.concurrent.BlockingQueue;
 

@@ -1,4 +1,4 @@
-package com.catinthedark.cw_inc.lib;
+package com.catinthedark.cw_inc.lib.shm;
 
 import java.util.function.Consumer;
 

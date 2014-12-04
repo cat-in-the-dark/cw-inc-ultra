@@ -1,6 +1,6 @@
-package com.catinthedark.cw_inc.lib;
+package com.catinthedark.cw_inc.lib.util;
 
-import com.catinthedark.cw_inc.lib.LogicalFunction;
+import com.catinthedark.cw_inc.lib.common.LogicalFunction;
 
 import java.util.function.Supplier;
 

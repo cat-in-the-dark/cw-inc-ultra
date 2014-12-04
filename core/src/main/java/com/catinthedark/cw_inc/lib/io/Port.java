@@ -1,4 +1,6 @@
-package com.catinthedark.cw_inc.lib;
+package com.catinthedark.cw_inc.lib.io;
+
+import com.catinthedark.cw_inc.lib.common.RunnableEx;
 
 /**
  * Created by over on 11.11.14.

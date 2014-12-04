@@ -8,7 +8,11 @@ import com.catinthedark.cw_inc.impl.common.DirectionY;
 import com.catinthedark.cw_inc.impl.common.GameShared;
 import com.catinthedark.cw_inc.impl.common.GameState;
 import com.catinthedark.cw_inc.lib.*;
-import static com.catinthedark.cw_inc.lib.SysUtils.conditional;
+import com.catinthedark.cw_inc.lib.common.Nothing;
+import com.catinthedark.cw_inc.lib.io.Pipe;
+import com.catinthedark.cw_inc.lib.io.Port;
+
+import static com.catinthedark.cw_inc.lib.util.SysUtils.conditional;
 
 /**
  * Created by over on 11.11.14.

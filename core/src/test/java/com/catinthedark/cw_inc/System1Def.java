@@ -1,7 +1,7 @@
 package com.catinthedark.cw_inc;
 
 import com.catinthedark.cw_inc.lib.AbstractSystemDef;
-import com.catinthedark.cw_inc.lib.Port;
+import com.catinthedark.cw_inc.lib.io.Port;
 
 /**
  * Created by over on 08.11.14.

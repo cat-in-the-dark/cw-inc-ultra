@@ -9,14 +9,14 @@ import com.catinthedark.cw_inc.impl.common.GameShared;
 import com.catinthedark.cw_inc.impl.common.GameState;
 import com.catinthedark.cw_inc.impl.message.BlockCreateReq;
 import com.catinthedark.cw_inc.lib.AbstractSystemDef;
-import com.catinthedark.cw_inc.lib.Nothing;
-import com.catinthedark.cw_inc.lib.Pipe;
-import com.catinthedark.cw_inc.lib.Port;
+import com.catinthedark.cw_inc.lib.common.Nothing;
+import com.catinthedark.cw_inc.lib.io.Pipe;
+import com.catinthedark.cw_inc.lib.io.Port;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.catinthedark.cw_inc.lib.SysUtils.conditional;
+import static com.catinthedark.cw_inc.lib.util.SysUtils.conditional;
 
 /**
  * Created by over on 15.11.14.

@@ -11,8 +11,8 @@ import com.catinthedark.cw_inc.impl.common.DirectionX;
 import com.catinthedark.cw_inc.impl.common.GameShared;
 import com.catinthedark.cw_inc.impl.level.LevelMatrix;
 import com.catinthedark.cw_inc.lib.AbstractSystemDef;
-import com.catinthedark.cw_inc.lib.Nothing;
-import com.catinthedark.cw_inc.lib.Port;
+import com.catinthedark.cw_inc.lib.common.Nothing;
+import com.catinthedark.cw_inc.lib.io.Port;
 import com.catinthedark.cw_inc.lib.view.Renderable;
 import com.catinthedark.cw_inc.lib.view.ScreenManager;
 

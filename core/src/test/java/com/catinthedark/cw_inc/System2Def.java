@@ -1,7 +1,7 @@
 package com.catinthedark.cw_inc;
 
 import com.catinthedark.cw_inc.lib.AbstractSystemDef;
-import com.catinthedark.cw_inc.lib.Pipe;
+import com.catinthedark.cw_inc.lib.io.Pipe;
 
 /**
  * Created by over on 08.11.14.

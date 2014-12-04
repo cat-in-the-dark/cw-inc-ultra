@@ -1,8 +1,8 @@
 package com.catinthedark.cw_inc.impl.physics;
 
 import com.badlogic.gdx.physics.box2d.*;
-import com.catinthedark.cw_inc.lib.VoidFunction;
-import static com.catinthedark.cw_inc.lib.ContactUtils.query;
+import com.catinthedark.cw_inc.lib.common.VoidFunction;
+import static com.catinthedark.cw_inc.lib.util.ContactUtils.query;
 
 /**
  * Created by over on 04.12.14.

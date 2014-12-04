@@ -1,4 +1,4 @@
-package com.catinthedark.cw_inc.lib;
+package com.catinthedark.cw_inc.lib.util;
 
 import com.badlogic.gdx.physics.box2d.Contact;
 

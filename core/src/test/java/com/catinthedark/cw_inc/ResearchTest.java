@@ -1,6 +1,6 @@
 package com.catinthedark.cw_inc;
 
-import com.catinthedark.cw_inc.lib.Launcher;
+import com.catinthedark.cw_inc.lib.run.Launcher;
 import org.junit.Test;
 
 public class ResearchTest {
