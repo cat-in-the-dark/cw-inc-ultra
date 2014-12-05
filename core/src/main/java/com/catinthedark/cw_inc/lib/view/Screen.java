@@ -28,6 +28,7 @@ public abstract class Screen<T> {
         beforeRender();
         for (Layer layer : layers)
             layer.render(shared);
+        postEffect(shared);
     }
 
     /**

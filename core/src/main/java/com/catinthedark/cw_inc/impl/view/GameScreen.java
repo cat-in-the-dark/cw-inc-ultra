@@ -2,8 +2,10 @@ package com.catinthedark.cw_inc.impl.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.CatmullRomSpline;
@@ -21,6 +23,9 @@ import java.util.stream.IntStream;
  * Created by over on 15.11.14.
  */
 public class GameScreen extends Screen<RenderShared> {
+    final FrameBuffer fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 1024, 640, false);
+    final SpriteBatch result = new SpriteBatch();
+
     public GameScreen() {
         super(new Layer<RenderShared>() {
                   @Override
@@ -148,13 +153,24 @@ public class GameScreen extends Screen<RenderShared> {
 
     @Override
     public void beforeShow() {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
     @Override
     public void beforeRender() {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        fbo.begin();
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    }
+
+    @Override
+    public void postEffect(RenderShared shared) {
+        fbo.end();
+        TextureRegion reg = new TextureRegion(fbo.getColorBufferTexture());
+        reg.flip(false, true);
+        result.begin();
+        result.draw(reg,0,0);
+        result.end();
     }
 }
