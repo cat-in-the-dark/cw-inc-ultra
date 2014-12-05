@@ -25,6 +25,8 @@ import java.util.stream.IntStream;
 public class GameScreen extends Screen<RenderShared> {
     final FrameBuffer fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 1024, 640, false);
     final SpriteBatch result = new SpriteBatch();
+    final ShaderProgram scanline = new ShaderProgram(Gdx.files.internal("edge.vert").readString(),
+            Gdx.files.internal("edge.frag").readString());
 
     public GameScreen() {
         super(new Layer<RenderShared>() {
@@ -167,8 +169,17 @@ public class GameScreen extends Screen<RenderShared> {
     @Override
     public void postEffect(RenderShared shared) {
         fbo.end();
+//        System.out.print(scanline.getLog());
+//        for(String uniform : scanline.getUniforms()){
+//            System.out.println(uniform);
+//        }
+        scanline.begin();
+//        scanline.setUniformf("rt_w", 1024);
+//        scanline.setUniformf("rt_h", 640);
+        scanline.end();
         TextureRegion reg = new TextureRegion(fbo.getColorBufferTexture());
         reg.flip(false, true);
+        result.setShader(scanline);
         result.begin();
         result.draw(reg,0,0);
         result.end();
